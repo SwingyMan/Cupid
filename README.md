@@ -6,6 +6,8 @@ Trello - zarządzanie podziałem pracy, taskami - https://trello.com/b/0D5hV8hS/
 
 Excel - wykaz godzin pracy - https://polslpl-my.sharepoint.com/:x:/g/personal/gp303244_student_polsl_pl/ETDlv32_XjJNk37AUePgPccBuQkLfVU5cVaxAU7IuPrUGg?e=0ckF7G
 
+Word - analiza projektowa - https://polslpl-my.sharepoint.com/:w:/g/personal/gp303244_student_polsl_pl/EX2smlNG7otPjTAYz0EExoMBOd524O5eBHZuHVZdv9j8Xw?e=jrdy77
+
 Discord - komunikacja
 
 -------------
