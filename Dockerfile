@@ -10,4 +10,5 @@ WORKDIR /backend
 COPY --from=build /build/app .
 EXPOSE 80
 EXPOSE 443
-CMD ["/backend/app"]
+ENV GIN_MODE release
+ENTRYPOINT ["/backend/app"]
