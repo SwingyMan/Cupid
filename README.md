@@ -14,11 +14,13 @@ Discord - komunikacja
 
 -------------
 
-Backend (.NET)
+Backend (Go)
 
 Mobilka (Xamarin)
 
-DB (Postgres)
+DB (Sqlite)
+
+Docker
 
 Cloud (Azure)
 
