@@ -8,7 +8,6 @@ FROM alpine:latest
 LABEL authors="Marcin Bogus"
 WORKDIR /backend
 COPY --from=build /build/app .
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
 ENV GIN_MODE release
 ENTRYPOINT ["/backend/app"]
