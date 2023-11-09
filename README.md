@@ -14,7 +14,9 @@ Discord - komunikacja
 
 -------------
 
-Backend (.NET)
+Backend (Go)
+
+Docker
 
 Mobilka (Xamarin)
 
