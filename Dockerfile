@@ -9,4 +9,5 @@ LABEL authors="Marcin Bogus"
 WORKDIR /backend
 COPY --from=build /build/app .
 EXPOSE 80
+EXPOSE 443
 CMD ["/backend/app"]
