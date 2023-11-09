@@ -1,20 +1,17 @@
 package main
 
 import (
+	"cupid/Controllers"
+	"cupid/Infrastructure"
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 func main() {
 	r := gin.Default()
 	//migrate if no db
-	_, err := gorm.Open(sqlite.Open("database.db"), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-	r.GET("/test", func(context *gin.Context) {
-		context.JSON(200, "x:lol")
-	})
+	Infrastructure.ConnectDatabase()
+	r.GET("/api/user/", Controllers.GetAllUsers)
+	r.GET("/api/user/:id", Controllers.GetUser)
+	r.POST("/api/user/add", Controllers.AddUser)
 	r.Run("localhost:80")
 }
