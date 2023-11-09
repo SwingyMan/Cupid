@@ -4,7 +4,7 @@ Trello - zarządzanie podziałem pracy, taskami - [https://trello.com/b/](https:
 
 Excel - wykaz godzin pracy - [https://polslpl-my.sharepoint.com/](https://polslpl-my.sharepoint.com/:x:/g/personal/gp303244_student_polsl_pl/ETDlv32_XjJNk37AUePgPccBuQkLfVU5cVaxAU7IuPrUGg?e=0ckF7G)
 
-Miro - rysunki, graficzne pomysły, bazgroły - [https://miro.com/app/board](https://miro.com/app/board/uXjVNdhfG38=/?share_link_id=355324821814)
+Miro - rysunki, graficzne pomysły, bazgroły - [https://miro.com/app/board](https://miro.com/app/board/uXjVNQmD_oI=/?share_link_id=192469193167)
 
 Word - analiza projektowa - [https://polslpl-my.sharepoint.com/](https://polslpl-my.sharepoint.com/:w:/g/personal/gp303244_student_polsl_pl/EX2smlNG7otPjTAYz0EExoMBOd524O5eBHZuHVZdv9j8Xw?e=jrdy77)
 
