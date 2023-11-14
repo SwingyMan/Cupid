@@ -4,6 +4,7 @@ import (
 	"cupid/Infrastructure"
 	"cupid/Models"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func AddUser(ctx *gin.Context) {
@@ -24,8 +25,18 @@ func GetUser(ctx *gin.Context) {
 	ctx.JSON(200, user)
 }
 func EditUser(ctx *gin.Context) {
-
+	var previousUser Models.User
+	var newUser Models.User
+	id := ctx.Param("id")
+	Infrastructure.DB.Find(&previousUser, id)
+	ctx.Bind(&newUser)
+	newId, _ := strconv.ParseUint(id, 10, 32)
+	newUser.ID = uint(newId)
+	Infrastructure.DB.Save(&newUser)
+	ctx.JSON(200, newUser)
 }
-func DeleteUser(ctx gin.Context) {
-
+func DeleteUser(ctx *gin.Context) {
+	id := ctx.Param("id")
+	Infrastructure.DB.Unscoped().Delete(&Models.User{}, id)
+	ctx.JSON(200, "")
 }
