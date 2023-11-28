@@ -16,7 +16,7 @@ Discord - komunikacja
 
 Backend (Go)
 
-Mobilka (Xamarin)
+Mobilka (React Native)
 
 DB (Sqlite)
 
