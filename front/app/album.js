@@ -1,32 +1,30 @@
 import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button } from 'react-native';
+import { Link } from 'expo-router'
+import { observer } from 'mobx-react';
+import { useStore } from '../mobx/store';
 
 import colors from '../styles/colors';
-import { useRouter } from 'expo-router';
 
-export default function Album() {
+export default observer(function Album() {
 
-    const router = useRouter();
+    const { appStore } = useStore();
 
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
                 <View style={styles.box_top}>
                     <Image style={styles.image}
-                        source={{ uri: 'https://picsum.photos/300' }}
+                        source={{ uri: appStore.images[0].uri }}
                     />
                 </View>
                 <View style={styles.box_bottom}>
                     <Text style={styles.text}>Album Album Album</Text>
-                    <Button
-                        title="Wróć"
-                        onPress={() => router.back()}
-                        color={colors.taupe}
-                    />
+                    <Link style={styles.link} href="/photos">&lt;Wróć</Link>
                 </View>
             </SafeAreaView>
         </View>
     );
-}
+})
 
 const styles = StyleSheet.create({
     body: {

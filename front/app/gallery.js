@@ -1,10 +1,16 @@
 import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, ScrollView, FlatList } from 'react-native';
 import { Link } from 'expo-router'
 import { useState } from 'react';
+import { observer } from 'mobx-react';
 
+
+import { useStore } from '../mobx/store';
+import EButton from '../styles/EButton'
 import colors from '../styles/colors';
 
-export default function Gallery() {
+export default observer(function Gallery() {
+
+    const { appStore } = useStore();
 
     return (
         <View style={styles.body}>
@@ -20,7 +26,7 @@ export default function Gallery() {
             </SafeAreaView>
         </View>
     );
-}
+})
 
 const styles = StyleSheet.create({
     body: {

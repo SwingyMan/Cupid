@@ -3,95 +3,62 @@ import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Butt
 import { Link } from 'expo-router'
 import { Camera, CameraType } from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
+import { observer } from 'mobx-react';
+import { action } from 'mobx';
 
+import { useStore } from '../mobx/store';
 import EButton from '../styles/EButton'
 import colors from '../styles/colors';
 
-export default function CameraRoll() {
+export default observer(function CameraRoll() {
 
-    const [hasCameraPermission, setHasCameraPermission] = useState(null);
-    const [image, setImage] = useState(null);
-    const [type, setType] = useState(Camera.Constants.Type.back);
+    const { appStore } = useStore();
     const cameraRef = useRef();
-
-    useEffect(() => {
-        (async () => {
-            MediaLibrary.requestPermissionsAsync();
-            const cameraStatus = await Camera.requestCameraPermissionsAsync();
-            setHasCameraPermission(cameraStatus.status === 'granted');
-        })();
-    }, [])
-
-    const takePicture = async () => {
-        if (cameraRef.current) {
-            try {
-                const data = await cameraRef.current.takePictureAsync();
-                console.log(data);
-                setImage(data.uri);
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    }
-
-    const saveImage = async () => {
-        if (image) {
-            try {
-                await MediaLibrary.createAssetAsync(image);
-                alert("Zapisano")
-                setImage(null);
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    }
 
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
                 <View style={styles.box_top}>
-                    {!image ?
+                    {!appStore.photo ?
                         <Camera style={styles.camera}
-                            type={type}
+                            type={appStore.type}
                             ref={cameraRef}
                             onMountError={(err) => {
                                 console.log(err)
                             }}
-                            >
+                        >
                             <View style={styles.ebutton}>
                                 <EButton style={styles.ebutton}
                                     icon='retweet'
-                                    onPress={() => {
-                                        setType(type === CameraType.back ? CameraType.front : CameraType.back)
-                                    }}
+                                    onPress={() => { appStore.toggleCamType() }}
                                 />
                             </View>
                         </Camera>
                         :
                         <Image style={styles.camera}
-                            source={{ uri: image }}
+                            source={{ uri: appStore.photo }}
                         />
                     }
                 </View>
                 <View style={styles.box_bottom}>
-                    {image ?
+                    {appStore.photo ?
                         <View style={styles.buttons}>
                             <Button
                                 title='Wyczyść'
                                 color={colors.taupe}
-                                onPress={() => { setImage(null) }}
+                                onPress={() => { appStore.clearPhoto() }}
                             />
                             <Button
                                 title='Zapisz'
                                 color={colors.taupe}
-                                onPress={saveImage}
+                                onPress={() => { appStore.savePhoto() }}
                             />
                         </View>
                         :
                         <Button
                             title='Zrób zdjęcie'
                             color={colors.taupe}
-                            onPress={takePicture}
+                            onPress={() => { appStore.takePicture(cameraRef) }}
                         />
                     }
                     <Link style={styles.link} href="/photos">&lt;Wróć</Link>
@@ -99,7 +66,7 @@ export default function CameraRoll() {
             </SafeAreaView>
         </View>
     );
-}
+})
 
 const styles = StyleSheet.create({
     body: {

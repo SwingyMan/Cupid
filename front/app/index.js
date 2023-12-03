@@ -1,34 +1,43 @@
-//import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Pressable, Button, Alert } from 'react-native';
-import { Link } from 'expo-router'
-//import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button } from 'react-native';
+import { Link, router } from 'expo-router'
+import axios from 'axios';
+import { observer, action } from 'mobx-react';
 
-//import { styles, simpleStyles } from "./styles/style";
-//const { View, Text, Button, TextInput, StyleSheet, SafeAreaView, StatusBar } = simpleStyles(styles);
 import colors from '../styles/colors';
+import { useStore } from '../mobx/store';
 
-export default function Page() {
+export default observer(function Page() {
+
+    const { appStore } = useStore();
+
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
                 <View style={styles.box_top}>
                     <Image style={styles.image}
                         source={require('../assets/cupid_icon.png')}
-                    //source={{ uri: 'https://picsum.photos/300' }}
                     />
                 </View>
                 <View style={styles.box_bottom}>
                     <Text style={styles.text}>Wprowadź kod zaproszenia</Text>
                     <TextInput style={styles.input}
+                        defaultValue={appStore.code}
+                        onChangeText={(txt) => appStore.setCode(txt)}
                         maxLength={10}
+                        onSubmitEditing={() => appStore.checkCode()}
                     />
-                    <Link style={styles.link} href="/photos">Photos&gt;</Link>
-                    <Link style={styles.link} href="/album">Album&gt;</Link>
+                    <Button
+                        title='Wejdź'
+                        onPress={() => appStore.checkCode()}
+                        color={colors.taupe}
+                    />
+                    <Link style={styles.link} href="/photos">//Photos&gt;</Link>
+                    <Link style={styles.link} href="/album">//Album&gt;</Link>
                 </View>
             </SafeAreaView>
         </View>
     );
-}
+})
 
 const styles = StyleSheet.create({
     body: {

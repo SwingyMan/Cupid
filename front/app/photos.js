@@ -1,21 +1,24 @@
 import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, ScrollView, FlatList } from 'react-native';
 import { Link } from 'expo-router'
-import { useState } from 'react';
+import { observer } from 'mobx-react';
+import * as MediaLibrary from 'expo-media-library'
+import { useEffect } from 'react';
+import { Camera } from 'expo-camera'
 
+import { useStore } from '../mobx/store';
 import colors from '../styles/colors';
 
-export default function Photos() {
+export default observer(function Photos() {
 
-    const [images, setImages] = useState([
-        { id: "1", uri: 'https://picsum.photos/300' },
-        { id: "2", uri: 'https://picsum.photos/300' },
-        { id: "3", uri: 'https://picsum.photos/300' },
-        { id: "4", uri: 'https://picsum.photos/300' },
-        { id: "5", uri: 'https://picsum.photos/300' },
-        { id: "6", uri: 'https://picsum.photos/300' },
-        { id: "7", uri: 'https://picsum.photos/300' },
-    ]);
+    const { appStore } = useStore();
 
+    useEffect(() => {
+        (async () => {
+            MediaLibrary.requestPermissionsAsync();
+            const cameraStatus = await Camera.requestCameraPermissionsAsync();
+            appStore.hasCameraPermission = (cameraStatus.status === 'granted');
+        })();
+    }, [])
 
     return (
         <View style={styles.body}>
@@ -23,7 +26,7 @@ export default function Photos() {
                 <View style={styles.box_top}>
                     <FlatList 
                         horizontal
-                        data={images}
+                        data={appStore.images}
                         renderItem={({item}) => <Image style={styles.image} source={{uri: item.uri}} key={item.id}></Image>}
                         keyExtractor={item => item.id}
                     />
@@ -36,7 +39,7 @@ export default function Photos() {
             </SafeAreaView>
         </View>
     );
-}
+})
 
 const styles = StyleSheet.create({
     body: {

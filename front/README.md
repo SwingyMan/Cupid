@@ -1,4 +1,4 @@
-use [`expo-router`](https://expo.github.io/router) to build native navigation using files in the `app/` directory.
+Use [`expo-router`](https://expo.github.io/router) to build native navigation using files in the `app/` directory.
 
 ## 🚀 How to use
 
@@ -13,9 +13,12 @@ npx expo start
 ```
 
 might need to install some more packages
+1. 
+2. npm install mobx mobx-react
 
 ## 📝 Notes
 
-- [recommended Expo docs](https://docs.expo.dev/get-started/create-a-project/)
-- [Expo Router: docs](https://expo.github.io/router)
-- [Expo Router: repo](https://github.com/expo/router)
+- [recommended Expo reading](https://docs.expo.dev/get-started/create-a-project/)
+
+- [Expo Router: Docs](https://expo.github.io/router)
+- [Expo Router: Repo](https://github.com/expo/router)
