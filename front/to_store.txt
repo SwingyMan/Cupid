@@ -1,0 +1,22 @@
+
+-wybrane zdjecia - images[]
+-kod zapro - code
+
+album
+
+camera:
+-permission
+-photo
+-przod/tyl
+-cameraRef
+
+funkcje:
+-checkCode()
+
+-takePicture()
+-savePhoto()
+
+
+
+
+Style?
