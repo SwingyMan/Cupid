@@ -6,6 +6,24 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7c91d00c-805c-4323-8f41-8c9aeb11841d"
+      }
+    },
+    "android": {
+      "package": "com.gesiek.cupidapptest"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7c91d00c-805c-4323-8f41-8c9aeb11841d"
+    },
+    "ios": {}
   }
 }

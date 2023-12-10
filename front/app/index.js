@@ -42,7 +42,7 @@ export default observer(function Page() {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        backgroundColor: colors.gray,
+        backgroundColor: colors.taupe,
     },
     homeScreen: {
         flex: 1,
