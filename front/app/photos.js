@@ -23,17 +23,21 @@ export default observer(function Photos() {
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
+                <StatusBar
+                    backgroundColor={colors.taupe}
+                    barStyle={'light-content'}
+                />
                 <View style={styles.box_top}>
-                    <FlatList 
+                    <FlatList
                         horizontal
                         data={appStore.images}
-                        renderItem={({item}) => <Image style={styles.image} source={{uri: item.uri}} key={item.id}></Image>}
+                        renderItem={({ item }) => <Image style={styles.image} source={{ uri: item.uri }} key={item.id}></Image>}
                         keyExtractor={item => item.id}
                     />
                 </View>
                 <View style={styles.box_bottom}>
                     <Link style={styles.link} href="/camera">Camera&gt;</Link>
-                    <Link style={styles.link} href="/gallery">Gallery&gt;</Link>
+                    <Link style={styles.link} href="/gallery_page">Gallery&gt;</Link>
                     <Link style={styles.link} href="/album">Album&gt;</Link>
                 </View>
             </SafeAreaView>

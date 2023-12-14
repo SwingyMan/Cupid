@@ -8,12 +8,13 @@ to start app run:
 
 to build apk: 
 `eas build --platform android`
-`eas build -p android --profile preview`
+`eas build -p android --profile preview --message "Updating the app"`
 `eas update --branch preview --message "Updating the app"`
 
 installed packages:\
 1. npm install mobx mobx-react\
 2. npm install -g eas-cli\
+3. npm i expo-image-multiple-picker react-native-svg expo-media-library\
 
 ## Links
 

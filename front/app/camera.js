@@ -18,6 +18,12 @@ export default observer(function CameraRoll() {
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
+
+                <StatusBar
+                    backgroundColor={colors.taupe}
+                    barStyle={'light-content'}
+                />
+
                 <View style={styles.box_top}>
                     {!appStore.photo ?
                         <Camera style={styles.camera}

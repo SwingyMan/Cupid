@@ -1,7 +1,8 @@
-import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, View, StatusBar, TextInput, Image, Button } from 'react-native';
 import { Link, router } from 'expo-router'
 import axios from 'axios';
 import { observer, action } from 'mobx-react';
+//import { StatusBar } from 'expo-status-bar';
 
 import colors from '../styles/colors';
 import { useStore } from '../mobx/store';
@@ -13,12 +14,19 @@ export default observer(function Page() {
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
+                
+                <StatusBar
+                    backgroundColor={colors.taupe}
+                    barStyle={'light-content'}
+                />
+
                 <View style={styles.box_top}>
                     <Image style={styles.image}
                         source={require('../assets/cupid_icon.png')}
                     />
                 </View>
                 <View style={styles.box_bottom}>
+                    <Text style={styles.text}>v.0.0.59</Text>
                     <Text style={styles.text}>Wprowadź kod zaproszenia</Text>
                     <TextInput style={styles.input}
                         defaultValue={appStore.code}
