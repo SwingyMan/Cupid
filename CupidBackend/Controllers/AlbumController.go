@@ -3,6 +3,7 @@ package Controllers
 import (
 	"cupid/Infrastructure"
 	"cupid/Models"
+	"cupid/Services"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -18,9 +19,9 @@ func GetAlbums(c *gin.Context) {
 }
 
 func GetAlbum(c *gin.Context) {
-	id := c.Params.ByName("id")
+	id := c.Params.ByName("InviteCode")
 	var album Models.Album
-	if err := Infrastructure.DB.Where("id = ?", id).First(&album).Error; err != nil {
+	if err := Infrastructure.DB.Where("InviteCode = ?", id).First(&album).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	} else {
@@ -31,7 +32,7 @@ func GetAlbum(c *gin.Context) {
 func CreateAlbum(c *gin.Context) {
 	var album Models.Album
 	c.BindJSON(&album)
-
+	album.InviteCode = Services.GenerateRandomString(6)
 	if err := Infrastructure.DB.Create(&album).Error; err != nil {
 		c.AbortWithStatus(500)
 		fmt.Println(err)
@@ -41,9 +42,9 @@ func CreateAlbum(c *gin.Context) {
 }
 
 func UpdateAlbum(c *gin.Context) {
-	id := c.Params.ByName("id")
+	id := c.Params.ByName("InviteCode")
 	var album Models.Album
-	if err := Infrastructure.DB.Where("id = ?", id).First(&album).Error; err != nil {
+	if err := Infrastructure.DB.Where("InviteCode = ?", id).First(&album).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	}
@@ -59,9 +60,9 @@ func UpdateAlbum(c *gin.Context) {
 }
 
 func DeleteAlbum(c *gin.Context) {
-	id := c.Params.ByName("id")
+	id := c.Params.ByName("InviteCode")
 	var album Models.Album
-	d := Infrastructure.DB.Where("id = ?", id).Delete(&album)
+	d := Infrastructure.DB.Where("InviteCode = ?", id).Delete(&album)
 	fmt.Println(d)
 	c.JSON(200, gin.H{"id #" + id: "deleted"})
 }
