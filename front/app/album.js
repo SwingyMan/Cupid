@@ -1,7 +1,9 @@
-import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated } from 'react-native';
 import { Link } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
+import React, { Component } from 'react';
+import Draggable from '../assets/Draggable.js';
 
 import colors from '../styles/colors';
 
@@ -12,15 +14,19 @@ export default observer(function Album() {
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
-                <View style={styles.box_top}>
-                    <Image style={styles.image}
-                        source={{ uri: appStore.images[0].uri }}
-                    />
+                <View style={styles.box_top} />
+                <View style={styles.row}>
+                    <Draggable/>
+                    <Draggable/>
+                    <Draggable/>
+                    <Draggable/>
+                    <Draggable/>
                 </View>
-                <View style={styles.box_bottom}>
+             {/*   <View style={styles.box_bottom}>
                     <Text style={styles.text}>Album Album Album</Text>
                     <Link style={styles.link} href="/photos">&lt;Wróć</Link>
                 </View>
+    */}
             </SafeAreaView>
         </View>
     );
@@ -39,12 +45,14 @@ const styles = StyleSheet.create({
         //justifyContent: 'center',
     },
     box_top: {
-        flex: 0.5,
+        backgroundColor: 'green',
+        height: 200,
         alignItems: 'center', // --
         justifyContent: 'center', // |
     },
     box_bottom: {
-        flex: 0.5,
+        flex: 0.1,
+        backgroundColor: 'red',
         alignItems: 'center', // --
         justifyContent: 'center', // |
     },
@@ -70,5 +78,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: 'sans-serif'
     },
+    row: {
+        flexDirection: "row",
+        height: 100,
+    },
 })
+
 
