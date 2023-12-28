@@ -3,6 +3,7 @@ package main
 import (
 	"cupid/Controllers"
 	"cupid/Infrastructure"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +13,7 @@ func main() {
 
 	//migrate if no db
 	Infrastructure.ConnectDatabase()
-
+	r.Use(cors.Default())
 	r.GET("/api/user/", Controllers.GetAllUsers)
 	r.GET("/api/user/:id", Controllers.GetUser)
 	r.POST("/api/user/add", Controllers.AddUser)
@@ -40,5 +41,12 @@ func main() {
 	r.POST("/api/tags", Controllers.CreateTag)
 	r.PUT("/api/tags/:id", Controllers.UpdateTag)
 	r.DELETE("/api/tags/:id", Controllers.DeleteTag)
+
+	r.GET("/albumusers", Controllers.GetAlbumUsers)
+	r.GET("/albumusers/:id", Controllers.GetAlbumUser)
+	r.POST("/albumusers", Controllers.CreateAlbumUser)
+	r.PUT("/albumusers/:id", Controllers.UpdateAlbumUser)
+	r.DELETE("/albumusers/:id", Controllers.DeleteAlbumUser)
+
 	r.Run()
 }
