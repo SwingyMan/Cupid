@@ -10,7 +10,7 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	database, err := gorm.Open(postgres.Open(os.Getenv("db")), &gorm.Config{})
+	database, err := gorm.Open(postgres.Open(os.Getenv("APPSETTING_db")), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
