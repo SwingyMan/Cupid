@@ -19,7 +19,7 @@ func GetAlbums(c *gin.Context) {
 }
 
 func GetAlbum(c *gin.Context) {
-	id := c.Params.ByName("InviteCode")
+	id := c.Params.ByName("id")
 	var album Models.Album
 	if err := Infrastructure.DB.Where("InviteCode = ?", id).First(&album).Error; err != nil {
 		c.AbortWithStatus(404)
