@@ -6,7 +6,7 @@ type Album struct {
 	gorm.Model
 	Title      string
 	Image      []Image
-	UserID     uint8
+	OwnerID    uint8
 	IsOwner    bool
 	InviteCode string
 }

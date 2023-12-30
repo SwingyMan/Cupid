@@ -37,6 +37,6 @@ func EditUser(ctx *gin.Context) {
 }
 func DeleteUser(ctx *gin.Context) {
 	id := ctx.Param("id")
-	Infrastructure.DB.Unscoped().Delete(&Models.User{}, id)
+	Infrastructure.DB.Delete(&Models.User{}, id)
 	ctx.JSON(200, "")
 }

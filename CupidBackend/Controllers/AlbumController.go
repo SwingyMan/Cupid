@@ -20,8 +20,8 @@ func GetAlbums(c *gin.Context) {
 
 func GetAlbum(c *gin.Context) {
 	id := c.Params.ByName("id")
-	var album = Models.Album{InviteCode: id}
-	if err := Infrastructure.DB.Model(&album).First(&album).Error; err != nil {
+	var album Models.Album
+	if err := Infrastructure.DB.Where(Models.Album{InviteCode: id}).Find(&album).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	} else {
@@ -60,7 +60,7 @@ func UpdateAlbum(c *gin.Context) {
 }
 
 func DeleteAlbum(c *gin.Context) {
-	id := c.Params.ByName("InviteCode")
+	id := c.Params.ByName("id")
 	var album = Models.Album{InviteCode: id}
 	d := Infrastructure.DB.Where(&album).Delete(&album)
 	fmt.Println(d)
