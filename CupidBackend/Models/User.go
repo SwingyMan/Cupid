@@ -10,5 +10,5 @@ type User struct {
 	IpOfRegistry string
 	FirstName    string
 	LastName     string
-	Album        []Album
+	Albums       []Album `gorm:"many2many:user_albums;"`
 }

@@ -6,7 +6,7 @@ type Album struct {
 	gorm.Model
 	Title      string
 	Image      []Image
-	OwnerID    uint8
-	IsOwner    bool
+	UserID     uint8
+	Users      []User `gorm:"many2many:user_albums;"`
 	InviteCode string
 }

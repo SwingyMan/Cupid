@@ -3,8 +3,11 @@ package Controllers
 import (
 	"cupid/Infrastructure"
 	"cupid/Models"
+	"cupid/Services"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"io"
+	"strconv"
 )
 
 func GetImages(c *gin.Context) {
@@ -30,8 +33,15 @@ func GetImage(c *gin.Context) {
 
 func CreateImage(c *gin.Context) {
 	var image Models.Image
-	c.BindJSON(&image)
-
+	file, _ := c.FormFile("image")
+	text, _ := file.Open()
+	binary, _ := io.ReadAll(text)
+	link := Services.WriteToImgur(string(binary))
+	userid, _ := strconv.Atoi(c.PostForm("userid"))
+	albumid, _ := strconv.Atoi(c.PostForm("albumid"))
+	image.UserID = uint8(userid)
+	image.AlbumID = uint8(albumid)
+	image.ImageLink = link
 	if err := Infrastructure.DB.Create(&image).Error; err != nil {
 		c.AbortWithStatus(500)
 		fmt.Println(err)
