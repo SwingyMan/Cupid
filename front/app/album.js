@@ -35,18 +35,17 @@ export default observer(function Album() {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        backgroundColor: colors.gray,
     },
     homeScreen: {
         flex: 1,
-        backgroundColor: colors.lavender,
         //marginTop: StatusBar.currentHeight,
         alignItems: 'center', // --
         //justifyContent: 'center',
     },
     box_top: {
         backgroundColor: 'green',
-        height: 200,
+        height: '400px',
+        width: '100%',
         alignItems: 'center', // --
         justifyContent: 'center', // |
     },
@@ -69,8 +68,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         borderRadius: 10,
         fontSize: 26,
-        backgroundColor: colors.taupe,
-        color: colors.white,
     },
     text: {
         color: colors.taupe,

@@ -17,20 +17,19 @@ const Draggable = () => {
     const panResponder = useRef(
         PanResponder.create({
             onStartShouldSetPanResponder: () => true,
-            onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }]),
-            onPanResponderRelease: () => {
-                pan.extractOffset();
-            },
+            onPanResponderMove:Animated.event([null, { dx: pan.x, dy: pan.y }]),
             onPanResponderRelease: (e, gesture) => {
-                if (gesture.moveY < 200) {
+                if (gesture.moveY < 400) {
                     pan.extractOffset();
-                    
+                    console.log({...pan})
                 } else {
+                    pan.setOffset({x: 0, y: 0});
+                    pan.resetAnimation();
                     Animated.spring(pan, {
-                    toValue: { x: 0, y: 0 },
-                    friction: 5
-                }).start();
-                } 
+                        toValue: { x: 0, y: 0 },
+                        friction: 10
+                    }).start(); 
+                }
             }
         })
     ).current;
