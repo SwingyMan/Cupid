@@ -4,8 +4,11 @@ import { Link } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
 import React, { Component, useRef, useState } from 'react';
+import EButton from '../styles/EButton'
+import colors from '../styles/colors';
 
-const Draggable = () => {
+
+const Draggable = ({id, url}) => {
     const pan = useRef(new Animated.ValueXY()).current;
     this.state = {
         showDraggable: true,
@@ -13,13 +16,13 @@ const Draggable = () => {
         pan: new Animated.ValueXY(),
         opacity: new Animated.Value(1)
     };
-
+    const { appStore } = useStore();
     const panResponder = useRef(
         PanResponder.create({
             onStartShouldSetPanResponder: () => true,
             onPanResponderMove:Animated.event([null, { dx: pan.x, dy: pan.y }]),
             onPanResponderRelease: (e, gesture) => {
-                if (gesture.moveY < 400) {
+                if (gesture.moveY < 600) {
                     pan.extractOffset();
                     console.log({...pan})
                 } else {
@@ -39,16 +42,23 @@ const Draggable = () => {
         transform: pan.getTranslateTransform(),
     };
 
-    return <Animated.View {...panResponder.panHandlers} style={[panStyle, styles.circle]} />;
+    return (
+    <Animated.View {...panResponder.panHandlers} style={[panStyle, styles.circle]} >
+        <Image style={styles.image} source={url} key={id}></Image>
+    </Animated.View>
+    )
 };
 
 export default Draggable;
 let CIRCLE_RADIUS = 30;
 const styles = StyleSheet.create({
     circle: {
-        backgroundColor: "skyblue",
         width: CIRCLE_RADIUS * 2,
         height: CIRCLE_RADIUS * 2,
-        borderRadius: CIRCLE_RADIUS
+        borderRadius: CIRCLE_RADIUS,
+    },
+    image: {
+        width: "100%",
+        height: "100%",
     }
 });

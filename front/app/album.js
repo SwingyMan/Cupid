@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated } from 'react-native';
+import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated } from 'react-native';
 import { Link } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
@@ -15,13 +15,19 @@ export default observer(function Album() {
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
                 <View style={styles.box_top} />
-                <View style={styles.row}>
-                    <Draggable/>
-                    <Draggable/>
-                    <Draggable/>
-                    <Draggable/>
-                    <Draggable/>
-                </View>
+                {/* <FlatList style={styles.row}
+                        horizontal
+                        data={appStore.images}
+                        renderItem={({item}) => <Draggable url={{uri: item.uri}} id={item.id}/>}
+                        keyExtractor={item => item.id}
+                    /> */}
+                 <View style={styles.row}>
+
+                    {appStore.images.map((item) =>{
+                        return <Draggable url={item.uri} key={item.id} id={item.id}/>
+                    })}
+                    
+                </View> 
              {/*   <View style={styles.box_bottom}>
                     <Text style={styles.text}>Album Album Album</Text>
                     <Link style={styles.link} href="/photos">&lt;Wróć</Link>
@@ -44,7 +50,7 @@ const styles = StyleSheet.create({
     },
     box_top: {
         backgroundColor: 'green',
-        height: '400px',
+        height: '600px',
         width: '100%',
         alignItems: 'center', // --
         justifyContent: 'center', // |
@@ -77,6 +83,7 @@ const styles = StyleSheet.create({
     },
     row: {
         flexDirection: "row",
+        backgroundColor: "yellow",
         height: 100,
     },
 })

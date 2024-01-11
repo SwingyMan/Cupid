@@ -16,14 +16,14 @@ export default class AppStore {
     code = "";
     images = ([
         { id: "1", uri: 'https://picsum.photos/300' },
-        { id: "2", uri: 'https://picsum.photos/300' },
-        { id: "3", uri: 'https://picsum.photos/300' },
-        { id: "4", uri: 'https://picsum.photos/300' },
-        { id: "5", uri: 'https://picsum.photos/300' },
-        { id: "6", uri: 'https://picsum.photos/300' },
-        { id: "7", uri: 'https://picsum.photos/300' },
-        { id: "8", uri: 'https://picsum.photos/300' },
-        { id: "9", uri: 'https://picsum.photos/300' },
+        { id: "2", uri: 'https://picsum.photos/301' },
+        { id: "3", uri: 'https://picsum.photos/307' },
+        { id: "4", uri: 'https://picsum.photos/311' },
+        { id: "5", uri: 'https://picsum.photos/370' },
+        { id: "6", uri: 'https://picsum.photos/380' },
+        { id: "7", uri: 'https://picsum.photos/390' },
+        { id: "8", uri: 'https://picsum.photos/306' },
+        { id: "9", uri: 'https://picsum.photos/309' },
     ]);
     hasCameraPermission = null;
     photo = null;
