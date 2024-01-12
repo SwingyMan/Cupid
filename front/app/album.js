@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated } from 'react-native';
+import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated, ScrollView } from 'react-native';
 import { Link } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
@@ -14,25 +14,37 @@ export default observer(function Album() {
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
-                <View style={styles.box_top} />
-                {/* <FlatList style={styles.row}
+
+                <View style={styles.box_top}>
+                    <Text style={styles.text}>// album //</Text>
+                </View>
+
+                <View style={styles.box_bottom}>
+                    <FlatList style={styles.flat_list}
+                        // numColumns={4}
                         horizontal
                         data={appStore.images}
-                        renderItem={({item}) => <Draggable url={{uri: item.uri}} id={item.id}/>}
+                        renderItem={({ item }) =>
+                            <Draggable style={styles.upIndex} id={item.id} path={{ uri: item.uri }} key={item.id} />
+                        }
                         keyExtractor={item => item.id}
-                    /> */}
-                 <View style={styles.row}>
-
-                    {appStore.images.map((item) =>{
-                        return <Draggable url={item.uri} key={item.id} id={item.id}/>
-                    })}
-                    
-                </View> 
-             {/*   <View style={styles.box_bottom}>
-                    <Text style={styles.text}>Album Album Album</Text>
-                    <Link style={styles.link} href="/photos">&lt;Wróć</Link>
+                        removeClippedSubviews={false}
+                        CellRendererComponent={({ children }) => children}
+                    >
+                    </FlatList>
+                    {/* <View style={styles.section}>
+                        <Text>// &gt; scrollable &gt; //</Text>
+                    </View> */}
                 </View>
-    */}
+
+                {/* <View style={styles.box_bottom}>
+                    <ScrollView horizontal style={styles.scroll_view}>
+                        {appStore.images.map((item) => {
+                            return <Draggable style={styles.upIndex} id={item.id} path={{ uri: item.uri }} key={item.id} />
+                        })}
+                    </ScrollView>
+                </View> */}
+
             </SafeAreaView>
         </View>
     );
@@ -40,6 +52,7 @@ export default observer(function Album() {
 
 const styles = StyleSheet.create({
     body: {
+        // position: 'absolute',
         flex: 1,
     },
     homeScreen: {
@@ -47,45 +60,66 @@ const styles = StyleSheet.create({
         //marginTop: StatusBar.currentHeight,
         alignItems: 'center', // --
         //justifyContent: 'center',
+        // backgroundColor: 'red',
     },
     box_top: {
+        // height: "75%",
         backgroundColor: 'green',
-        height: '600px',
+        flex: 0.75,
         width: '100%',
         alignItems: 'center', // --
         justifyContent: 'center', // |
+        // position: 'absolute',
+        // zIndex: 1,
     },
     box_bottom: {
-        flex: 0.1,
-        backgroundColor: 'red',
+        flex: 0.25,
         alignItems: 'center', // --
         justifyContent: 'center', // |
-    },
-    image: {
-        width: 170,
-        height: 170,
-        borderRadius: 85,
-    },
-    input: {
-        height: 70,
-        width: 200,
-        borderWidth: 1,
-        padding: 12,
-        marginTop: 20,
-        borderRadius: 10,
-        fontSize: 26,
+        backgroundColor: "yellow",
+        width: '100%',
+        // flexWrap: 'wrap',
+        // overflowY: 'visible',
+        // zIndex: 3,
     },
     text: {
-        color: colors.taupe,
+        // flex: 1,
+        color: colors.white,
         margin: 20,
         fontSize: 20,
         fontFamily: 'sans-serif'
     },
-    row: {
+    row_view: {
         flexDirection: "row",
-        backgroundColor: "yellow",
-        height: 100,
+        width: '100vw',
+        backgroundColor: 'rgb(248, 218, 48)',
     },
+    scroll_view: {
+        height: 200,
+        width: '100vw',
+        backgroundColor: 'yellow',
+    },
+    section: {
+        flex: 1,
+        alignItems: 'center', // --
+        justifyContent: 'center', // |
+        width: '100vw',
+        // zIndex: 3,
+    },
+    flat_list: {
+        // flex: 1,
+        // justifyContent: 'center', // |
+        // alignItems: 'center', // --
+        // backgroundColor: "yellow",
+        // height: 50,
+        overflowX: 'visible',
+        width: '100%',
+        backgroundColor: 'rgb(248, 218, 48)',
+        zIndex: 3,
+    },
+    upIndex: {
+        zIndex: 3,
+    }
 })
 
 
