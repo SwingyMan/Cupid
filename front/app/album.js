@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated } from 'react-native';
+import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated, ScrollView } from 'react-native';
 import { Link } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
@@ -21,13 +21,14 @@ export default observer(function Album() {
                         renderItem={({item}) => <Draggable url={{uri: item.uri}} id={item.id}/>}
                         keyExtractor={item => item.id}
                     /> */}
-                 <View style={styles.row}>
+                 <ScrollView style={styles.row} 
+                 horizontal>
 
                     {appStore.images.map((item) =>{
                         return <Draggable url={item.uri} key={item.id} id={item.id}/>
                     })}
                     
-                </View> 
+                </ScrollView> 
              {/*   <View style={styles.box_bottom}>
                     <Text style={styles.text}>Album Album Album</Text>
                     <Link style={styles.link} href="/photos">&lt;Wróć</Link>
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
     },
     homeScreen: {
         flex: 1,
-        //marginTop: StatusBar.currentHeight,
+        marginTop: StatusBar.currentHeight,
         alignItems: 'center', // --
         //justifyContent: 'center',
     },
