@@ -21,7 +21,8 @@ func GetAlbums(c *gin.Context) {
 func GetAlbum(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var album Models.Album
-	if err := Infrastructure.DB.Where(Models.Album{InviteCode: id}).Find(&album).Error; err != nil {
+	album.InviteCode = id
+	if err := Infrastructure.DB.Find(&album).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	} else {
