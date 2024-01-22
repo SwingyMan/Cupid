@@ -1,13 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, ScrollView } from 'react-native';
-import { Link } from 'expo-router'
+import { Dimensions } from 'react-native';
+import { Link, router } from 'expo-router'
 import { Camera, CameraType } from 'expo-camera'
-import * as MediaLibrary from 'expo-media-library'
 import { observer } from 'mobx-react';
-import { action } from 'mobx';
 
 import { useStore } from '../mobx/store';
-import EButton from '../styles/EButton'
+import EButton from '../assets/EButton'
 import colors from '../styles/colors';
 
 export default observer(function CameraRoll() {
@@ -20,54 +19,74 @@ export default observer(function CameraRoll() {
             <SafeAreaView style={styles.homeScreen}>
 
                 <StatusBar
-                    backgroundColor={colors.taupe}
-                    barStyle={'light-content'}
+                    backgroundColor={colors.black}
+                    barStyle={'dark-content'}
+                    // backgroundColor={colors.black}
+                    // barStyle={'light-content'}
                 />
 
                 <View style={styles.box_top}>
-                    {!appStore.photo ?
-                        <Camera style={styles.camera}
-                            type={appStore.type}
-                            ref={cameraRef}
-                            onMountError={(err) => {
-                                console.log(err)
-                            }}
-                        >
-                            <View style={styles.ebutton}>
-                                <EButton style={styles.ebutton}
-                                    icon='retweet'
-                                    onPress={() => { appStore.toggleCamType() }}
-                                />
-                            </View>
-                        </Camera>
-                        :
-                        <Image style={styles.camera}
-                            source={{ uri: appStore.photo }}
-                        />
-                    }
+                    <View style={styles.cameraBox}>
+                        {!appStore.photo ?
+                            <Camera style={styles.camera}
+                                type={appStore.camType}
+                                ref={cameraRef}
+                                onMountError={(err) => {
+                                    console.log(err)
+                                }}
+                            >
+                                <View style={styles.ebutton}>
+                                    <EButton style={styles.ebutton}
+                                        icon='retweet'
+                                        onPress={() => { appStore.toggleCamType() }}
+                                    />
+                                </View>
+                            </Camera>
+                            :
+                            <Image style={styles.camera}
+                                source={{ uri: appStore.photo }}
+                            />
+                        }
+                    </View>
                 </View>
                 <View style={styles.box_bottom}>
                     {appStore.photo ?
                         <View style={styles.buttons}>
-                            <Button
-                                title='Wyczyść'
-                                color={colors.taupe}
-                                onPress={() => { appStore.clearPhoto() }}
-                            />
-                            <Button
-                                title='Zapisz'
-                                color={colors.taupe}
-                                onPress={() => { appStore.savePhoto() }}
-                            />
+                            <View style={styles.viewButton}>
+                                <Button
+                                    title='Wyczyść'
+                                    color={colors.black}
+                                    onPress={() => { appStore.clearPhoto() }}
+                                />
+                            </View>
+                            <View style={styles.viewButton}>
+                                <Button
+                                    title='Dodaj'
+                                    color={colors.black}
+                                    onPress={() => { appStore.savePhoto() }}
+                                />
+                            </View>
                         </View>
                         :
-                        <Button
-                            title='Zrób zdjęcie'
-                            color={colors.taupe}
-                            onPress={() => { appStore.takePicture(cameraRef) }}
-                        />
+                        <View style={styles.buttons}>
+                            <View style={styles.viewButton}>
+                                <EButton
+                                    touchableStyles={{ height: 32 }}
+                                    icon='arrow-with-circle-left'
+                                    color={colors.black}
+                                    onPress={() => { router.replace('/photos') }}
+                                />
+                            </View>
+                            <View style={styles.viewButton}>
+                                <Button
+                                    title='Zrób zdjęcie'
+                                    color={colors.black}
+                                    onPress={() => { appStore.takePicture(cameraRef) }}
+                                />
+                            </View>
+                        </View>
                     }
-                    <Link style={styles.link} href="/photos">&lt;Wróć</Link>
+                    {/* <Link style={styles.link} href="/photos">&lt;Wróć</Link> */}
                 </View>
             </SafeAreaView>
         </View>
@@ -87,16 +106,17 @@ const styles = StyleSheet.create({
         //justifyContent: 'center',
     },
     box_top: {
-        flex: 0.75,
+        flex: 0.85,
         width: '100%',
         alignItems: 'center', // --
         justifyContent: 'center', // |
         backgroundColor: colors.taupe,
     },
     box_bottom: {
-        flex: 0.25,
+        flex: 0.15,
         alignItems: 'center', // --
-        justifyContent: 'center', // |
+        // justifyContent: 'center', // |
+        backgroundColor: colors.taupe,
     },
     image: {
         width: 170,
@@ -123,11 +143,29 @@ const styles = StyleSheet.create({
     link: {
         margin: 10,
         fontSize: 20,
+        textDecorationLine: 'underline',
     },
+    // buttons: {
+    //     //backgroundColor: colors.pink,
+    //     flex: 0.65,
+    //     justifyContent: 'space-between'
+    // },
     buttons: {
-        //backgroundColor: colors.pink,
-        flex: 0.65,
-        justifyContent: 'space-between'
+        // backgroundColor: colors.mint,
+        width: '100%',
+        height: 50,
+        // display: 'flex',
+        // flex: 1,
+        flexDirection: 'row',
+        alignContent: 'center',
+        justifyContent: 'space-evenly',
+        // justifyContent: 'center'
+    },
+    viewButton: {
+        height: "100%",
+        alignContent: "center",
+        justifyContent: 'center',
+        // backgroundColor: 'red'
     },
     ebutton: {
         alignItems: 'flex-end',
@@ -136,9 +174,17 @@ const styles = StyleSheet.create({
         margin: 20,
     },
     camera: {
-        backgroundColor: colors.taupe,
-        width: '90%',
-        height: '90%',
+        // width: '90%',
+        // height: '90%',
+        width: (Dimensions.get('window').width - 20),
+        height: ((Dimensions.get('window').width - 20) / 3 * 4),
+        borderColor: colors.white,
+        backgroundColor: colors.red,
+    },
+    cameraBox: {
+        // flex: 1
+        borderWidth: 2,
+        borderColor: colors.white
     }
 })
 

@@ -1,30 +1,53 @@
 import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, ScrollView, FlatList } from 'react-native';
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { useState } from 'react';
 import { observer } from 'mobx-react';
-
+//import { ImagePicker } from 'expo-image-multiple-picker'
+import { ImagePicker } from '../assets/MultiImgPicker';
 
 import { useStore } from '../mobx/store';
-import EButton from '../styles/EButton'
+import EButton from '../assets/EButton'
 import colors from '../styles/colors';
 
-export default observer(function Gallery() {
+export default observer(function GalleryPage() {
 
     const { appStore } = useStore();
 
     return (
+
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
-                <View style={styles.box_top}>
-                    {/* {images.map((img) => (
-                        <Image style={styles.image} source={img.uri} key={img.id}></Image>
-                    ))} */}
-                </View>
-                <View style={styles.box_bottom}>
-                    <Link style={styles.link} href="/photos">&lt;Wróć</Link>
-                </View>
+
+                <StatusBar
+                    backgroundColor={colors.black}
+                    barStyle={'light-content'}
+                />
+
+                <ImagePicker
+                    onSave={(wybrane) => appStore.pickMultipleImages(wybrane)}
+                    onCancel={() => { console.log("wybór anulowany!"); router.replace('/photos') }}
+                    multiple
+                    galleryColumns={3}
+                    noAlbums
+                //albumColumns={3}
+                />
+                {/* 
+        //         <View style={styles.box_top}>
+        //         </View>
+        //         <View style={styles.box_bottom}>
+        //             <Button
+        //                 title='Wybierz z galerii'
+        //                 color={colors.taupe}
+        //                 onPress={() => { appStore.pickImageAsync() }}
+        //             />
+        //             <Link style={styles.link} href="/photos">&lt;Wróć</Link>
+        //         </View> */}
+
             </SafeAreaView>
         </View>
+
+
+
     );
 })
 
@@ -41,7 +64,7 @@ const styles = StyleSheet.create({
         //justifyContent: 'center',
     },
     box_top: {
-        flex: 0.5,
+        flex: 0.1,
         width: '100%',
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -50,7 +73,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.taupe,
     },
     box_bottom: {
-        flex: 0.5,
+        flex: 0.9,
         alignItems: 'center', // --
         justifyContent: 'center', // |
     },
@@ -79,6 +102,7 @@ const styles = StyleSheet.create({
     link: {
         margin: 40,
         fontSize: 20,
+        textDecorationLine: 'underline',
     },
 })
 

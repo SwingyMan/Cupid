@@ -80,8 +80,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
-        // backgroundColor: 'white',
-        backgroundColor: colors.thistle,
+        backgroundColor: colors.black,
+        // backgroundColor: colors.thistle,
+        // borderBottomWidth: 10,
+        // borderBlockColor: colors.taupe,
         elevation: 1,
     },
     defaultHeaderButton: {
@@ -91,12 +93,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 22,
         borderRadius: 6,
         elevation: 3,
-        backgroundColor: 'black',
+        backgroundColor: colors.white,
     },
     defaultHeaderButtonText: {
-        fontSize: 14,
+        fontSize: 16,
         letterSpacing: 0.25,
-        color: 'white',
+        color: colors.black,
+        fontWeight: 'bold'
     },
     defaultSliderContainer: {
         position: 'absolute',
@@ -139,6 +142,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.5)',
         borderRadius: 20,
     },
+    text: {
+        fontSize: 28,
+        fontFamily: 'Coolvetica',
+        color: colors.white,
+        // color: colors.taupe
+    }
 });
 class ImageBox extends PureComponent {
     constructor() {
@@ -180,20 +189,26 @@ class ImageBox extends PureComponent {
                     .slice(11, 19)))));
     }
     render() {
-        return (React.createElement(TouchableOpacity, { onPress: this.toggle.bind(this), style: {
+        return (React.createElement(TouchableOpacity, {
+            onPress: this.toggle.bind(this), style: {
                 width: this.props.item.size.width,
                 height: this.props.item.size.height,
-            } },
-            React.createElement(Image, { style: {
+            }
+        },
+            React.createElement(Image, {
+                style: {
                     width: this.props.item.size.width,
                     resizeMode: 'cover',
                     flex: 1,
-                }, source: { uri: this.props.item.asset.uri } }),
+                }, source: { uri: this.props.item.asset.uri }
+            }),
             !!this.props.item.asset.duration && (React.createElement(View, { style: styles.root }, this.getVideoComponent())),
-            React.createElement(View, { style: {
+            React.createElement(View, {
+                style: {
                     ...styles.root,
                     opacity: this.state.checked ? 1 : 0,
-                } }, this.getCheckedComponent())));
+                }
+            }, this.getCheckedComponent())));
     }
 }
 export class ImagePickerCarousel extends Component {
@@ -332,9 +347,11 @@ export class ImagePickerCarousel extends Component {
     }
     render() {
         return (React.createElement(React.Fragment, null,
-            React.createElement(FlatList, { data: this.state.data, renderItem: ({ item }) => React.createElement(ImageBox, { item: item }), numColumns: this.getColumns(), keyExtractor: (item) => item.asset.id, initialNumToRender: this.getItemsPerScreen(), maxToRenderPerBatch: this.getItemsPerScreen(), onEndReached: () => this.fetchNextPage(this.getItemsPerScreen()), onMoveShouldSetResponderCapture: () => false, onStartShouldSetResponderCapture: () => false, ref: this.flatListRef, onScrollToIndexFailed: () => { }, onScroll: (e) => this.setState({
+            React.createElement(FlatList, {
+                data: this.state.data, renderItem: ({ item }) => React.createElement(ImageBox, { item: item }), numColumns: this.getColumns(), keyExtractor: (item) => item.asset.id, initialNumToRender: this.getItemsPerScreen(), maxToRenderPerBatch: this.getItemsPerScreen(), onEndReached: () => this.fetchNextPage(this.getItemsPerScreen()), onMoveShouldSetResponderCapture: () => false, onStartShouldSetResponderCapture: () => false, ref: this.flatListRef, onScrollToIndexFailed: () => { }, onScroll: (e) => this.setState({
                     currentIndex: Math.ceil(e.nativeEvent.contentOffset.y / this.getImageSize().height),
-                }), showsVerticalScrollIndicator: !this.props.timeSlider }),
+                }), showsVerticalScrollIndicator: !this.props.timeSlider
+            }),
             this.props.timeSlider && (React.createElement(ScrollTime, { data: this.state.data, flatList: this.flatListRef, galleryColumns: this.props.columns, currentIndex: this.state.currentIndex, selected: this.state.selectedAssets, height: this.props.timeSliderHeight, customSlider: this.props.slider }))));
     }
 }
@@ -477,31 +494,39 @@ function ScrollTime({ data, flatList, galleryColumns, currentIndex, height = scr
         const Slider = customSlider;
         return (React.createElement(Slider, { balloons: balloons, button: button, height: realHeight, isMoving: isMoving, buttonProps: buttonProps }));
     }
-    return (React.createElement(View, { style: {
+    return (React.createElement(View, {
+        style: {
             ...styles.defaultSliderContainer,
             height: realHeight,
-        } },
-        button && (React.createElement(View, { style: {
+        }
+    },
+        button && (React.createElement(View, {
+            style: {
                 ...styles.defaultSliderButton,
                 opacity: isMoving ? 0.9 : 0.4,
                 ...button.styles,
-            }, ...buttonProps },
+            }, ...buttonProps
+        },
             isMoving && (React.createElement(View, { style: styles.defaultSliderTime },
                 React.createElement(Text, null, button.date.toDateString()))),
             React.createElement(Svg, { viewBox: '0 0 562.392 562.391', fill: isMoving ? 'black' : 'white', width: 40, height: 40, style: { left: 5, top: 5 } },
                 React.createElement(Path, { d: 'M123.89,262.141h314.604c19.027,0,17.467-31.347,15.496-47.039c-0.605-4.841-3.636-11.971-6.438-15.967L303.965,16.533    c-12.577-22.044-32.968-22.044-45.551,0L114.845,199.111c-2.803,3.996-5.832,11.126-6.438,15.967    C106.43,230.776,104.863,262.141,123.89,262.141z' }),
                 React.createElement(Path, { d: 'M114.845,363.274l143.569,182.584c12.577,22.044,32.968,22.044,45.551,0l143.587-182.609    c2.804-3.996,5.826-11.119,6.438-15.967c1.971-15.691,3.531-47.038-15.496-47.038H123.89c-19.027,0-17.46,31.365-15.483,47.062    C109.019,352.147,112.042,359.277,114.845,363.274z' })))),
-        React.createElement(View, { style: {
+        React.createElement(View, {
+            style: {
                 ...styles.defaultSlider,
                 opacity: isMoving ? 1 : 0,
-            }, pointerEvents: 'none' }),
+            }, pointerEvents: 'none'
+        }),
         isMoving &&
-            balloons &&
-            balloons.map(({ top, quantity, styles: balloonStyles }) => (React.createElement(View, { key: top, style: {
-                    ...styles.defaultSliderBalloon,
-                    ...balloonStyles,
-                }, pointerEvents: 'none' },
-                React.createElement(Text, { style: { color: 'white', fontSize: 17 } }, quantity))))));
+        balloons &&
+        balloons.map(({ top, quantity, styles: balloonStyles }) => (React.createElement(View, {
+            key: top, style: {
+                ...styles.defaultSliderBalloon,
+                ...balloonStyles,
+            }, pointerEvents: 'none'
+        },
+            React.createElement(Text, { style: { color: 'white', fontSize: 17 } }, quantity))))));
 }
 function DefaultAlbum(props) {
     return (React.createElement(TouchableOpacity, { style: styles.defaultAlbumContainer, onPress: () => props.goToGallery(props.album) },
@@ -516,10 +541,10 @@ function DefaultHeader(props) {
                     React.createElement(Path, { fill: 'black', d: 'M192 448c-8.188 0-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L77.25 256l137.4 137.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448z' })))),
             props.imagesPicked == 0 && (React.createElement(React.Fragment, null,
                 props.album && (React.createElement(Text, { style: { fontSize: 20 } }, props.album.title)),
-                !props.album && props.multiple && (React.createElement(Text, { style: { fontSize: 20 } }, "Wybierz obrazy")),
-                !props.album && !props.multiple && (React.createElement(Text, { style: { fontSize: 20 } }, "Wybierz obraz")))),
+                !props.album && props.multiple && (React.createElement(Text, { style: styles.text }, "Wybierz obrazy")),
+                !props.album && !props.multiple && (React.createElement(Text, { style: styles.text }, "Wybierz obraz")))),
             props.imagesPicked > 0 && (React.createElement(React.Fragment, null,
-                props.multiple && (React.createElement(Text, { style: { fontSize: 20 } },
+                props.multiple && (React.createElement(Text, { style: styles.text },
                     "Wybrano ",
                     props.imagesPicked,
                     "x ")),
@@ -629,11 +654,13 @@ export function ImagePicker(props) {
             React.createElement(View, { style: styles.rootHeader },
                 React.createElement(Header, { view: 'album', imagesPicked: 0, multiple: props.multiple || false, picked: false, noAlbums: props.noAlbums || false })),
             albums && (React.createElement(FlatList, { style: styles.rootBody, data: albums, numColumns: props.albumColumns || 2, keyExtractor: (d) => d.album.id, renderItem: ({ item }) => React.createElement(Album, { ...item }) })),
-            !albums && (React.createElement(View, { style: {
+            !albums && (React.createElement(View, {
+                style: {
                     ...styles.rootBody,
                     alignContent: 'center',
                     justifyContent: 'center',
-                } },
+                }
+            },
                 React.createElement(ActivityIndicator, { size: 48, color: 'blue' })))));
     }
 }

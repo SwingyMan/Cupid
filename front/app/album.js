@@ -1,9 +1,10 @@
 import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button } from 'react-native';
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
 
 import colors from '../styles/colors';
+import EButton from '../assets/EButton';
 
 export default observer(function Album() {
 
@@ -12,15 +13,27 @@ export default observer(function Album() {
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
+
+                <StatusBar
+                    backgroundColor={colors.gray}
+                    barStyle={'light-content'}
+                />
+
                 <View style={styles.box_top}>
-                    <Image style={styles.image}
-                        source={{ uri: appStore.images[0].uri }}
-                    />
+                    <Text style={styles.text}>ALBUM</Text>
                 </View>
+
                 <View style={styles.box_bottom}>
-                    <Text style={styles.text}>Album Album Album</Text>
-                    <Link style={styles.link} href="/photos">&lt;Wróć</Link>
+                    {/* <Link style={styles.link} href="/photos">&lt;Wróć</Link> */}
+                    <View>
+                        <EButton
+                            icon='arrow-with-circle-left'
+                            color={colors.black}
+                            onPress={() => { router.push('/photos') }}
+                        />
+                    </View>
                 </View>
+
             </SafeAreaView>
         </View>
     );
@@ -39,12 +52,12 @@ const styles = StyleSheet.create({
         //justifyContent: 'center',
     },
     box_top: {
-        flex: 0.5,
+        flex: 0.8,
         alignItems: 'center', // --
         justifyContent: 'center', // |
     },
     box_bottom: {
-        flex: 0.5,
+        flex: 0.2,
         alignItems: 'center', // --
         justifyContent: 'center', // |
     },
@@ -69,6 +82,13 @@ const styles = StyleSheet.create({
         margin: 20,
         fontSize: 20,
         fontFamily: 'sans-serif'
+    },
+    link: {
+        display: "flex",
+        textDecorationLine: 'underline',
+        margin: 8,
+        fontSize: 18,
+        // width: 125,
     },
 })
 
