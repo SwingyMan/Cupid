@@ -17,6 +17,7 @@ func WriteToImgur(binary string) string {
 	payload := &bytes.Buffer{}
 	writer := multipart.NewWriter(payload)
 	_ = writer.WriteField("image", binary)
+	_ = writer.WriteField("type", "base64")
 	err := writer.Close()
 	if err != nil {
 		fmt.Println(err)

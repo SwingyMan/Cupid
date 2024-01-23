@@ -6,12 +6,10 @@ import (
 	"cupid/Services"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"io"
-	"strconv"
 )
 
 func GetImages(c *gin.Context) {
-	var images []Models.Image
+	var images []Models.Photo
 	if err := Infrastructure.DB.Find(&images).Error; err != nil {
 		c.AbortWithStatus(500)
 		fmt.Println(err)
@@ -22,7 +20,7 @@ func GetImages(c *gin.Context) {
 
 func GetImage(c *gin.Context) {
 	id := c.Params.ByName("id")
-	var image Models.Image
+	var image Models.Photo
 	if err := Infrastructure.DB.Where("id = ?", id).First(&image).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
@@ -32,16 +30,14 @@ func GetImage(c *gin.Context) {
 }
 
 func CreateImage(c *gin.Context) {
-	var image Models.Image
-	file, _ := c.FormFile("image")
-	text, _ := file.Open()
-	binary, _ := io.ReadAll(text)
-	link := Services.WriteToImgur(string(binary))
-	userid, _ := strconv.Atoi(c.PostForm("userid"))
-	albumid, _ := strconv.Atoi(c.PostForm("albumid"))
-	image.UserID = uint8(userid)
-	image.AlbumID = uint8(albumid)
-	image.ImageLink = link
+	var image Models.Photo
+	var request Models.PhotoRequest
+	c.BindJSON(&request)
+	imageString := request.Image
+	link := Services.WriteToImgur(imageString)
+	userid := request.UserID
+	image.UserID = userid
+	image.URL = link
 	if err := Infrastructure.DB.Create(&image).Error; err != nil {
 		c.AbortWithStatus(500)
 		fmt.Println(err)
@@ -52,7 +48,7 @@ func CreateImage(c *gin.Context) {
 
 func UpdateImage(c *gin.Context) {
 	id := c.Params.ByName("id")
-	var image Models.Image
+	var image Models.Photo
 	if err := Infrastructure.DB.Where("id = ?", id).First(&image).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
@@ -70,7 +66,7 @@ func UpdateImage(c *gin.Context) {
 
 func DeleteImage(c *gin.Context) {
 	id := c.Params.ByName("id")
-	var image Models.Image
+	var image Models.Photo
 	d := Infrastructure.DB.Where("id = ?", id).Delete(&image)
 	fmt.Println(d)
 	c.JSON(200, gin.H{"id #" + id: "deleted"})

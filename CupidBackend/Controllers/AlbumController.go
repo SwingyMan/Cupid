@@ -21,7 +21,7 @@ func GetAlbums(c *gin.Context) {
 func GetAlbum(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var album Models.Album
-	album.InviteCode = id
+	album.Code = id
 	if err := Infrastructure.DB.Find(&album).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
@@ -33,7 +33,7 @@ func GetAlbum(c *gin.Context) {
 func CreateAlbum(c *gin.Context) {
 	var album Models.Album
 	c.BindJSON(&album)
-	album.InviteCode = Services.GenerateRandomString(6)
+	album.Code = Services.GenerateRandomString(6)
 	if err := Infrastructure.DB.Create(&album).Error; err != nil {
 		c.AbortWithStatus(500)
 		fmt.Println(err)
@@ -44,7 +44,7 @@ func CreateAlbum(c *gin.Context) {
 
 func UpdateAlbum(c *gin.Context) {
 	id := c.Params.ByName("InviteCode")
-	var album = Models.Album{InviteCode: id}
+	var album = Models.Album{Code: id}
 	if err := Infrastructure.DB.Where(&album).First(&album).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
@@ -62,7 +62,7 @@ func UpdateAlbum(c *gin.Context) {
 
 func DeleteAlbum(c *gin.Context) {
 	id := c.Params.ByName("id")
-	var album = Models.Album{InviteCode: id}
+	var album = Models.Album{Code: id}
 	d := Infrastructure.DB.Where(&album).Delete(&album)
 	fmt.Println(d)
 	c.JSON(200, gin.H{"id #" + id: "deleted"})

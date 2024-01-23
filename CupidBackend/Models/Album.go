@@ -1,12 +1,11 @@
 package Models
 
-import "gorm.io/gorm"
-
 type Album struct {
-	gorm.Model
-	Title      string
-	Image      []Image
-	UserID     uint8
-	Users      []User `gorm:"many2many:user_albums;"`
-	InviteCode string
+	ID        uint
+	Title     string
+	Code      string
+	AdminID   uint8
+	NumPages  int
+	UserID    []uint8 `gorm:"many2many:album_users"`
+	PhotoSets []PhotoSet
 }

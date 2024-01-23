@@ -3,6 +3,7 @@ package Controllers
 import (
 	"cupid/Infrastructure"
 	"cupid/Models"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -15,8 +16,17 @@ func AddUser(ctx *gin.Context) {
 }
 func GetAllUsers(ctx *gin.Context) {
 	var users []Models.User
-	Infrastructure.DB.Find(&users)
-	ctx.JSON(200, users)
+	var user Models.User
+	username := ctx.Query("username")
+	if username == "" {
+
+		fmt.Println(username)
+		Infrastructure.DB.Find(&users)
+		ctx.JSON(200, users)
+	} else {
+		Infrastructure.DB.Where("Username = ?", username).First(&user)
+		ctx.JSON(200, user)
+	}
 }
 func GetUser(ctx *gin.Context) {
 	var user Models.User
