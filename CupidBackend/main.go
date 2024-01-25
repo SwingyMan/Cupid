@@ -26,7 +26,7 @@ func main() {
 	r.PUT("/api/albums/:id", Controllers.UpdateAlbum)
 	r.DELETE("/api/albums/:id", Controllers.DeleteAlbum)
 
-	r.GET("/api/photos", Controllers.GetImages)
+	r.GET("/api/photos/", Controllers.GetImages)
 	r.GET("/api/photos/:id", Controllers.GetImage)
 	r.POST("/api/photos", Controllers.CreateImage)
 	r.PUT("/api/photos/:id", Controllers.UpdateImage)

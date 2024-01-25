@@ -1,6 +1,6 @@
 package Models
 
 type Sticker struct {
-	ID          uint
+	StickerID   uint `gorm:"primaryKey"`
 	StickerLink string
 }

@@ -10,10 +10,16 @@ import (
 
 func GetImages(c *gin.Context) {
 	var images []Models.Photo
-	if err := Infrastructure.DB.Find(&images).Error; err != nil {
-		c.AbortWithStatus(500)
-		fmt.Println(err)
+	userid := c.Query("userId")
+	if userid == "" {
+		if err := Infrastructure.DB.Find(&images).Error; err != nil {
+			c.AbortWithStatus(500)
+			fmt.Println(err)
+		} else {
+			c.JSON(200, images)
+		}
 	} else {
+		Infrastructure.DB.Where("User_ID = ?", userid).Find(&images)
 		c.JSON(200, images)
 	}
 }

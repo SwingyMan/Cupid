@@ -14,6 +14,6 @@ func ConnectDatabase() {
 	if err != nil {
 		panic(err)
 	}
-	database.AutoMigrate(&Models.User{}, &Models.Tag{}, &Models.Photo{}, &Models.Album{}, &Models.Sticker{}, &Models.PhotoSet{}, &Models.AlbumPhotoSet{}, &Models.AlbumUser{})
+	database.AutoMigrate(&Models.User{}, &Models.Album{}, &Models.Tag{}, &Models.Photo{}, &Models.Sticker{})
 	DB = database
 }

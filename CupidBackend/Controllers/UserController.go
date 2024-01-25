@@ -3,7 +3,6 @@ package Controllers
 import (
 	"cupid/Infrastructure"
 	"cupid/Models"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -19,8 +18,6 @@ func GetAllUsers(ctx *gin.Context) {
 	var user Models.User
 	username := ctx.Query("username")
 	if username == "" {
-
-		fmt.Println(username)
 		Infrastructure.DB.Find(&users)
 		ctx.JSON(200, users)
 	} else {
@@ -41,7 +38,7 @@ func EditUser(ctx *gin.Context) {
 	Infrastructure.DB.Find(&previousUser, id)
 	ctx.Bind(&newUser)
 	newId, _ := strconv.ParseUint(id, 10, 32)
-	newUser.ID = uint(newId)
+	newUser.UserID = uint(newId)
 	Infrastructure.DB.Save(&newUser)
 	ctx.JSON(200, newUser)
 }
