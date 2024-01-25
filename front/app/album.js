@@ -16,10 +16,8 @@ export default observer(function Album() {
         try {
             let uri2;
             if (viewShotRef.current) {
-                await viewShotRef.current.capture().then((response) => {
-                    uri2 = response;
-                })
-                console.log("Convert to PDF: ", uri2);
+                uri2 = await viewShotRef.current.capture();
+                console.log(uri2);
             } else {
                 throw new Error('Ref is not available');
             }
@@ -28,26 +26,18 @@ export default observer(function Album() {
                 <html>
                     <body>
                     aaaaa TEST TESTTEST TESTTEST
-                    <img src="${uri2}"/>
+                        <img src="${uri2}"/>
                     </body>
                 </html>
             `;
             console.log('dupa1')
-            const options = {
-                html: htmlContent,
-                fileName: 'screenshot_pdf',
-                directory: 'Documents',
-            };
+            
             // const printToFile = async () => {
                 // On iOS/android prints the given html. On web prints the HTML from the current page.
-            const { uri } = await printToFileAsync({ htmlContent });
-            // console.log('File has been saved to:', uri);
-            // await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+            const { uri } = await printToFileAsync({ html: htmlContent });
+            console.log('File has been saved to:', uri);
+            await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
             // };
-
-            // console.log('dup2')
-            // const pdfFilePath = await RNHTMLtoPDF.convert(options);
-            // console.log('PDF created:', pdfFilePath);
         }
         catch (err) {
             console.error('Error:', err);
