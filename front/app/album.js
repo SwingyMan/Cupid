@@ -14,6 +14,7 @@ export default observer(function Album() {
     const viewShotRef = useRef();
     const convertToPdf = async () => {
         try {
+            let path = appStore.images[0].uri;
             let uri2;
             if (viewShotRef.current) {
                 uri2 = await viewShotRef.current.capture();
@@ -21,12 +22,11 @@ export default observer(function Album() {
             } else {
                 throw new Error('Ref is not available');
             }
-
             const htmlContent = `
                 <html>
                     <body>
                     aaaaa TEST TESTTEST TESTTEST
-                        <img src="${uri2}"/>
+                        <img src="${path}"/>
                     </body>
                 </html>
             `;
