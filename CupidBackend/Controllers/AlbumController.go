@@ -98,7 +98,9 @@ func UpdateAlbum(c *gin.Context) {
 	album.AdminID = uint8(albumJson.AdminID)
 	album.Title = albumJson.Title
 	album.NumPages = uint8(albumJson.NumPages)
-	Infrastructure.DB.Create(&album)
+	Infrastructure.DB.First(&album, "code = ?", id)
+	Infrastructure.DB.Where(Models.AlbumPhotos{AlbumID: album.AlbumID}).Delete(&Models.AlbumPhotos{})
+	Infrastructure.DB.Where(Models.AlbumUsers{AlbumID: album.AlbumID}).Delete(&Models.AlbumUsers{})
 	for _, d := range albumJson.UserIDs {
 		albumUsers.AlbumID = album.AlbumID
 		albumUsers.UserID = uint8(d)
@@ -120,6 +122,9 @@ func UpdateAlbum(c *gin.Context) {
 func DeleteAlbum(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var album = Models.Album{Code: id}
+	Infrastructure.DB.First(&album, "code = ?", id)
+	Infrastructure.DB.Where(Models.AlbumPhotos{AlbumID: album.AlbumID}).Delete(&Models.AlbumPhotos{})
+	Infrastructure.DB.Where(Models.AlbumUsers{AlbumID: album.AlbumID}).Delete(&Models.AlbumUsers{})
 	d := Infrastructure.DB.Where(&album).Delete(&album)
 	fmt.Println(d)
 	c.JSON(200, gin.H{"id #" + id: "deleted"})
