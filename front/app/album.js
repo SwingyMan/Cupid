@@ -1,51 +1,98 @@
-import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated, ScrollView, ScrollView } from 'react-native';
+import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated, ScrollView, ImageBackground} from 'react-native';
 import { Link } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
-import React, { Component } from 'react';
+import React, { Component, useRef } from 'react';
 import Draggable from '../assets/Draggable.js';
-
+import ViewShot from 'react-native-view-shot';
 import colors from '../styles/colors';
+import {printToFileAsync} from 'expo-print';
+import { shareAsync } from 'expo-sharing';
 
 export default observer(function Album() {
-
     const { appStore } = useStore();
+    const viewShotRef = useRef();
+    const convertToPdf = async () => {
+        try {
+            let uri2;
+            if (viewShotRef.current) {
+                await viewShotRef.current.capture().then((response) => {
+                    uri2 = response;
+                })
+                console.log("Convert to PDF: ", uri2);
+            } else {
+                throw new Error('Ref is not available');
+            }
+
+            const htmlContent = `
+                <html>
+                    <body>
+                    aaaaa TEST TESTTEST TESTTEST
+                    <img src="${uri2}"/>
+                    </body>
+                </html>
+            `;
+            console.log('dupa1')
+            const options = {
+                html: htmlContent,
+                fileName: 'screenshot_pdf',
+                directory: 'Documents',
+            };
+            // const printToFile = async () => {
+                // On iOS/android prints the given html. On web prints the HTML from the current page.
+            const { uri } = await printToFileAsync({ htmlContent });
+            // console.log('File has been saved to:', uri);
+            // await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+            // };
+
+            // console.log('dup2')
+            // const pdfFilePath = await RNHTMLtoPDF.convert(options);
+            // console.log('PDF created:', pdfFilePath);
+        }
+        catch (err) {
+            console.error('Error:', err);
+        }
+    }
+    
 
     return (
         <View style={styles.body}>
-            <SafeAreaView style={styles.homeScreen}>
-
-                <View style={styles.box_top}>
-                    <Text style={styles.text}>// album //</Text>
-                </View>
-
-                <View style={styles.box_bottom}>
-                    <FlatList style={styles.flat_list}
+            <SafeAreaView style={styles.homeScreen}> 
+            <View style={styles.box_toppest}>
+                <Button
+                    title='Zapisz'
+                    color="red"
+                    onPress={convertToPdf}
+                    />
+            </View>
+            <ViewShot  style={styles.box_big}ref={viewShotRef} options={{ format: 'jpg', quality: 0.9 }}>
+            <ViewShot 
+            style={styles.box_top}
+            options={{ format: 'jpg', quality: 0.9 }}/>
+                    {/* <FlatList style={styles.flat_list}
                         // numColumns={4}
                         horizontal
                         data={appStore.images}
+                        keyExtractor={item => item.id}
                         renderItem={({ item }) =>
                             <Draggable style={styles.upIndex} id={item.id} path={{ uri: item.uri }} key={item.id} />
                         }
-                        keyExtractor={item => item.id}
                         removeClippedSubviews={false}
                         CellRendererComponent={({ children }) => children}
                     >
-                    </FlatList>
+                    </FlatList> */}
                     {/* <View style={styles.section}>
                         <Text>// &gt; scrollable &gt; //</Text>
                     </View> */}
-                </View>
 
-                {/* <View style={styles.box_bottom}>
-                    <ScrollView horizontal style={styles.scroll_view}>
+                <View style={styles.flat_list}>
                         {appStore.images.map((item) => {
                             return <Draggable style={styles.upIndex} id={item.id} path={{ uri: item.uri }} key={item.id} />
                         })}
-                    </ScrollView>
-                </View> */}
-
+                </View>
+                </ViewShot>
             </SafeAreaView>
+            
         </View>
     );
 })
@@ -64,8 +111,18 @@ const styles = StyleSheet.create({
     },
     box_top: {
         // height: "75%",
-        backgroundColor: 'green',
-        flex: 0.75,
+        backgroundColor: 'white',
+        flex: 0.8,
+        width: '100%',
+        alignItems: 'center', // --
+        justifyContent: 'center', // |
+        // position: 'absolute',
+        // zIndex: 1,
+    },
+    box_toppest: {
+        // height: "75%",
+        backgroundColor: 'red',
+        flex: 0.1,
         width: '100%',
         alignItems: 'center', // --
         justifyContent: 'center', // |
@@ -73,14 +130,23 @@ const styles = StyleSheet.create({
         // zIndex: 1,
     },
     box_bottom: {
-        flex: 0.25,
+        flex: 0.1,
         alignItems: 'center', // --
         justifyContent: 'center', // |
-        backgroundColor: "yellow",
+        backgroundColor: "white",
         width: '100%',
         // flexWrap: 'wrap',
         // overflowY: 'visible',
         // zIndex: 3,
+    },
+        box_big: {
+            flex: 0.9,
+            alignItems: 'center', // --
+            justifyContent: 'center', // |
+            width: '100%',
+            // flexWrap: 'wrap',
+            // overflowY: 'visible',
+            // zIndex: 3,
     },
     text: {
         // flex: 1,
@@ -97,7 +163,7 @@ const styles = StyleSheet.create({
     scroll_view: {
         height: 200,
         width: '100vw',
-        backgroundColor: 'yellow',
+        backgroundColor: 'white',
     },
     section: {
         flex: 1,
@@ -107,19 +173,67 @@ const styles = StyleSheet.create({
         // zIndex: 3,
     },
     flat_list: {
-        // flex: 1,
-        // justifyContent: 'center', // |
-        // alignItems: 'center', // --
-        // backgroundColor: "yellow",
+        flex: 0.15,
+         justifyContent: 'center', // |
+        alignItems: 'center', // --
         // height: 50,
         overflowX: 'visible',
         width: '100%',
-        backgroundColor: 'rgb(248, 218, 48)',
+        backgroundColor: 'white',
         zIndex: 3,
+        flexDirection: "row",
+        columnGap: 10,
     },
     upIndex: {
         zIndex: 3,
-    }
+    },
+    background: {
+        flex: 1,
+        backgroundColor: 'rgb(255, 255, 255)',
+        }
 })
 
 
+
+
+
+
+
+
+
+    // const viewShotRef = useRef(null);
+
+    // const saveAsJpg = async () => {
+    //     try {
+    //     if (viewShotRef.current) {
+    //         const uri = await viewShotRef.current.capture();
+    //         console.log("dupa");
+    //         return uri;
+    //     } else {
+    //         throw new Error('Ref is not available');
+    //     }
+    //     } catch (error) {
+    //     console.error('Error capturing view as JPG:', error);
+    //     throw error;
+    //     }
+    //     };
+    // const convertToPdf = async () => {
+    //     try {
+    //         const jpgUri = await saveAsJpg();
+    //         const page = PDFPage.create();
+    //         page.drawImage(jpgUri, 'jpg', {
+    //             x: 0,
+    //             y: 0,
+    //             width: 200,
+    //             height: 100,
+    //         });
+    //         // const docsDir = await PDFLib.getDocumentsDirectory();
+    //         // const pdfPath = `${docsDir}/sample.pdf`;
+    //         PDFDocument.create('sample.pdf').addPages(page).write();
+
+    //         return console.log("Utworzono PDFa");
+    //     } catch (error) {
+    //         console.error('Error converting to PDF:', error);
+    //         throw error;
+    //     }
+    // };

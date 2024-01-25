@@ -1,15 +1,33 @@
-
-import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated, Dimensions } from 'react-native';
+import React, {useState, useRef} from 'react';
+import { StyleSheet, Image, PanResponder, Dimensions, Animated} from 'react-native';
 import { Link } from 'expo-router'
-import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
-import React, { Component, useRef, useState } from 'react';
 
-import EButton from '../styles/EButton'
 import colors from '../styles/colors';
 
-const Draggable = ({ id, path }) => {
 
+
+
+
+const Draggable = ({ id, path }) => {
+    const [panEnabled, setPanEnabled] = useState(false);
+//-------------------------------Skalowanie------------------------
+    // scale = new Animated.Value(1);
+    // onPinchEvent = Animated.event([
+    //   { nativeEvent: { scale: this.scale}}
+    //   ], { useNativeDriver: true })
+    
+    // onPinchStateChange = (event) => {
+    //   if(event.nativeEvent.oldState === GestureHandler.State.ACTIVE) {
+    //     Animated.spring(this.scale, {
+    //       toValue:1,
+    //       useNativeDriver: true,
+    //     }).start();
+    //   }
+    // }
+
+
+//--------------------Drag&drop------------------------
     const pan = useRef(new Animated.ValueXY()).current;
     const { appStore } = useStore();
     
@@ -28,7 +46,7 @@ const Draggable = ({ id, path }) => {
                 {useNativeDriver: false}
             ),
             onPanResponderRelease: (e, gesture) => {
-                if (gesture.moveY < 600) {
+                if (gesture.moveY < 800) {
                     pan.extractOffset();
                     console.log({ ...pan })
                 } else {
@@ -49,9 +67,16 @@ const Draggable = ({ id, path }) => {
     };
 
     return (
+      // <PinchGestureHandler
+      //   onGestureEvent={this.onPinchEvent}
+      //   //onHandlerStateChange = {this.onPinchStateChange}
+      // >
         <Animated.View {...panResponder.panHandlers} style={[panStyle, styles.rectangle]} >
-            <Image style={styles.image} source={path} key={id}></Image>
+            <Animated.Image style={[
+            styles.image
+            ]} source={path} key={id}></Animated.Image>
         </Animated.View>
+        // </PinchGestureHandler>
     )
 };
 
@@ -86,3 +111,8 @@ const styles = StyleSheet.create({
         // elevation: 1
     }
 });
+
+
+
+
+
