@@ -1,6 +1,6 @@
 package Models
 
 type PhotoRequest struct {
-	Image  string
+	Url    string
 	UserID uint8
 }

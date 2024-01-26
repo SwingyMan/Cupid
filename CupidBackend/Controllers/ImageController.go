@@ -39,7 +39,7 @@ func CreateImage(c *gin.Context) {
 	var image Models.Photo
 	var request Models.PhotoRequest
 	c.BindJSON(&request)
-	imageString := request.Image
+	imageString := request.Url
 	link := Services.WriteToImgur(imageString)
 	userid := request.UserID
 	image.UserID = userid
