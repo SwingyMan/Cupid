@@ -11,8 +11,30 @@ import (
 func GetAlbums(c *gin.Context) {
 	var albumsJson []Models.AlbumJson
 	var albums []Models.Album
-	Infrastructure.DB.Find(&albums)
-	for _, album := range albums {
+	code := c.Query("code")
+	if code == "" {
+		Infrastructure.DB.Find(&albums)
+		for _, album := range albums {
+			userIDs := Services.GetUserIDs(album.AlbumID)
+			photoIDs := Services.GetPhotoIDs(album.AlbumID)
+			photoID := Services.GroupElements(photoIDs)
+			albumJson := Models.AlbumJson{
+				ID:       album.AlbumID,
+				Title:    album.Title,
+				Code:     album.Code,
+				AdminID:  int(album.AdminID),
+				NumPages: int(album.NumPages),
+				UserIDs:  userIDs,
+				PhotoIDs: photoID,
+			}
+
+			albumsJson = append(albumsJson, albumJson)
+		}
+
+		c.JSON(200, albumsJson)
+	} else {
+		var album Models.Album
+		Infrastructure.DB.Where("code = ?", code).Find(&album)
 		userIDs := Services.GetUserIDs(album.AlbumID)
 		photoIDs := Services.GetPhotoIDs(album.AlbumID)
 		photoID := Services.GroupElements(photoIDs)
@@ -25,18 +47,14 @@ func GetAlbums(c *gin.Context) {
 			UserIDs:  userIDs,
 			PhotoIDs: photoID,
 		}
-
-		albumsJson = append(albumsJson, albumJson)
+		c.JSON(200, albumJson)
 	}
-
-	c.JSON(200, albumsJson)
 }
 
 func GetAlbum(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var album Models.Album
-	album.Code = id
-	Infrastructure.DB.Where("code = ?", id).Find(&album)
+	Infrastructure.DB.Where("albumId = ?", id).Find(&album)
 	userIDs := Services.GetUserIDs(album.AlbumID)
 	photoIDs := Services.GetPhotoIDs(album.AlbumID)
 	photoID := Services.GroupElements(photoIDs)
