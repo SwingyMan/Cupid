@@ -16,9 +16,9 @@ func main() {
 	r.Use(cors.Default())
 	r.GET("/api/users/", Controllers.GetAllUsers)
 	r.GET("/api/users/:id", Controllers.GetUser)
-	r.POST("/api/users/add", Controllers.AddUser)
-	r.PUT("/api/users/edit/:id", Controllers.EditUser)
-	r.DELETE("/api/users/delete/:id", Controllers.DeleteUser)
+	r.POST("/api/users/", Controllers.AddUser)
+	r.PUT("/api/users/:id", Controllers.EditUser)
+	r.DELETE("/api/users/:id", Controllers.DeleteUser)
 
 	r.GET("/api/albums", Controllers.GetAlbums)
 	r.GET("/api/albums/:id", Controllers.GetAlbum)
