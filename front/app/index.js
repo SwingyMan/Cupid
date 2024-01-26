@@ -40,12 +40,6 @@ export default observer(function Page() {
             <View style={styles.body} onLayout={() => appStore.onLayoutRootView()}>
                 <SafeAreaView style={styles.homeScreen}>
 
-                    {/* <Button
-                        title='TEST GUZIK'
-                        onPress={() => { appStore.guzik() }}
-                        color={colors.black}
-                    /> */}
-
                     <StatusBar
                         backgroundColor={colors.taupe}
                         barStyle={'light-content'}
@@ -57,7 +51,7 @@ export default observer(function Page() {
                                 onPress={() => { router.push('/admin') }}>
                                 <EButton
                                     icon='squared-plus'
-                                    color={colors.black}
+                                    color={colors.taupe}
                                     onPress={() => { router.push('/admin') }}
                                 />
                                 <View>
@@ -65,39 +59,48 @@ export default observer(function Page() {
                                 </View>
                             </Pressable>
                         </View>
-                        <Image style={styles.image}
-                            source={require('../assets/icon.png')}
-                        />
+                        <View style={styles.imageBox}>
+                            <Image style={styles.image}
+                                source={require('../assets/icons/icon.png')}
+                            />
+                        </View>
                     </View>
                     <View style={styles.box_bottom}>
-                        <Text style={styles.text}>Wprowadź kod zaproszenia</Text>
-                        <TextInput style={[styles.input, styles.inputCode]}
-                            defaultValue={appStore.code}
-                            onChangeText={(txt) => appStore.setCode(txt)}
-                            maxLength={10}
-                        // onSubmitEditing={() => appStore.checkCode()}
-                        />
-                        <Text style={styles.text}>Wprowadź swoje imie i nazwisko</Text>
-                        <TextInput style={[styles.input, styles.inputName]}
-                            defaultValue={appStore.username}
-                            onChangeText={(txt) => appStore.setUsername(txt)}
-                            maxLength={30}
-                            onSubmitEditing={() => appStore.checkEntering()}
-                        />
+                        <View style={styles.textAndInput}>
+                            <Text style={styles.text}>Wprowadź kod zaproszenia</Text>
+                            <TextInput style={[styles.input, styles.inputCode]}
+                                defaultValue={appStore.code}
+                                onChangeText={(txt) => appStore.setCode(txt)}
+                                maxLength={10}
+                            // onSubmitEditing={() => appStore.checkCode()}
+                            />
+                            <Text style={styles.text}>Wprowadź swoje imie i nazwisko</Text>
+                            <TextInput style={[styles.input, styles.inputName]}
+                                defaultValue={appStore.username}
+                                onChangeText={(txt) => appStore.setUsername(txt)}
+                                maxLength={30}
+                                onSubmitEditing={() => appStore.checkEntering()}
+                            />
+                        </View>
                         <Button
                             title='Wejdź'
                             onPress={() => appStore.checkEntering()}
-                            color={colors.black}
+                            color={colors.taupe}
                         />
                         <View style={styles.version}>
                             {/* <View style={styles.skroty}>
                                 <Link style={styles.link} href="/photos">//Photos&gt;</Link>
                                 <Link style={styles.link} href="/album">//Album&gt;</Link>
                                 <Link style={styles.link} href="/admin">//Admin&gt;</Link>
-                                </View>
-                                <Text>tworzenie usera jak nie ma</Text> */}
-                            <Text>v.0.7.1</Text>
-                            <Text>0.73:4444</Text>
+                                </View>*/}
+                            <Text>v.0.7.8</Text>
+                            <Text>poprawiony UI</Text>
+                            <Text>LOCAL-ON 192.168.0.73:4444</Text>
+                            {/* <Button
+                                title='TEST GUZIK'
+                                onPress={() => { appStore.guzik() }}
+                                color={colors.black}
+                            /> */}
                         </View>
                     </View>
                 </SafeAreaView>
@@ -113,19 +116,19 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.taupe,
     },
-    loadingScreen: {
-        flex: 1,
-        marginTop: -(StatusBar.currentHeight),
-        backgroundColor: '#dedede',
-        alignItems: 'center', // --
-        justifyContent: 'center',
-    },
-    imageLoading: {
-        width: 170,
-        height: 170,
-        borderRadius: 85,
-        marginTop: StatusBar.currentHeight,
-    },
+    // loadingScreen: {
+    //     flex: 1,
+    //     marginTop: -(StatusBar.currentHeight),
+    //     backgroundColor: '#dedede',
+    //     alignItems: 'center', // --
+    //     justifyContent: 'center',
+    // },
+    // imageLoading: {
+    //     width: 170,
+    //     height: 170,
+    //     borderRadius: 85,
+    //     marginTop: StatusBar.currentHeight,
+    // },
     homeScreen: {
         flex: 1,
         backgroundColor: colors.lavender,
@@ -134,28 +137,44 @@ const styles = StyleSheet.create({
         //justifyContent: 'center',
     },
     box_top: {
-        flex: 0.4,
+        flex: 0.45,
         alignItems: 'center', // --
         // justifyContent: 'center', // |
-        paddingTop: 10
+        paddingTop: 10,
+        // backgroundColor: 'yellow'
     },
     box_bottom: {
-        flex: 0.6,
+        flex: 0.55,
         alignItems: 'center', // --
         justifyContent: 'center', // |
+        // backgroundColor: colors.black
     },
+    textAndInput: {
+        alignItems: 'center', // --
+        justifyContent: 'center', // |
+        // height: '100%',
+        marginTop: -75,
+        backgroundColor: colors.lavender,
+    },
+    // imageBox: {
+    //     flex: 1,
+    //     justifyContent: 'flex-end',
+    //     backgroundColor: 'red'
+    // },
     image: {
         width: 170,
         height: 170,
-        // borderRadius: 85,
-        // backgroundColor: colors.black
+        borderRadius: 50,
+        // backgroundColor: colors.taupe
     },
     input: {
         height: 55,
         width: 200,
-        borderWidth: 3,
+        // borderWidth: 3,
         paddingLeft: 12,
         borderRadius: 10,
+        // borderColor: colors.lavender,
+        // borderWidth: 5,
         fontSize: 26,
         // backgroundColor: colors.taupe,
         backgroundColor: colors.taupe,
@@ -170,13 +189,14 @@ const styles = StyleSheet.create({
         width: 200,
     },
     text: {
-        color: colors.black,
+        color: colors.taupe,
         // fontWeight: '900',
         // letterSpacing: 0.4,
         //marginTop: 40,
         fontSize: 24,
         //fontFamily: 'sans-serif',
-        fontFamily: 'Coolvetica'
+        fontFamily: 'Coolvetica',
+        backgroundColor: colors.lavender
     },
     link: {
         display: "flex",
@@ -214,7 +234,7 @@ const styles = StyleSheet.create({
         paddingTop: 3,
         fontFamily: 'Coolvetica',
         fontSize: 16,
-        color: colors.black,
+        color: colors.taupe,
         // backgroundColor: 'red',
         alignContent: 'center'
     },

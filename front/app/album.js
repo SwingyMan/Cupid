@@ -28,7 +28,7 @@ export default observer(function Album() {
                     <View>
                         <EButton
                             icon='arrow-with-circle-left'
-                            color={colors.black}
+                            color={colors.taupe}
                             onPress={() => { router.push('/photos') }}
                         />
                     </View>

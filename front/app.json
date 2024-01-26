@@ -2,10 +2,11 @@
   "expo": {
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
-      "backgroundColor": "#dedede"
+      "image": "./assets/splash-new.png",
+      "backgroundColor": "#ddd",
+      "resizeMode": "cover"
     },
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icons/icon.png",
     "scheme": "acme",
     "web": {
       "bundler": "metro"

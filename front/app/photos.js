@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         // flexWrap: "wrap",
         justifyContent: 'center', // --
-        // borderTopWidth: 2,
+        borderTopWidth: 2,
+        borderColor: colors.white,
         width: "100%",
     },
     image: {
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
         color: colors.white,
     },
     text: {
-        color: colors.black,
+        color: colors.taupe,
         //marginTop: 40,
         fontSize: 24,
         fontFamily: 'Coolvetica',

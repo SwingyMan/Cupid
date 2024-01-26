@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, Keyboard } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, Keyboard, Pressable, Share } from 'react-native';
 import { Link, router } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
@@ -19,49 +19,68 @@ export default observer(function Admin() {
                     barStyle={'light-content'}
                 />
 
+                <View style={styles.box_header}>
+                    <Text style={[styles.text, styles.title]}>Tworzenie nowego albumu</Text>
+                </View>
+
                 <View style={styles.box_top}>
 
-                    <Text style={[styles.text, styles.title]}>Tworzenie nowego albumu</Text>
+                    <View style={styles.textAndInput}>
+                        <View style={styles.center}>
+                            <Text style={styles.text}>Wprowadź tytuł</Text>
+                            <Text style={styles.text}>dla swojego nowego albumu</Text>
+                            <TextInput style={styles.input}
+                                defaultValue={appStore.newTitle}
+                                onChangeText={(txt) => { appStore.setNewTitle(txt) }}
+                                maxLength={20}
+                            />
+                        </View>
 
-                    <View style={styles.center}>
-                        <Text style={styles.text}>Wprowadź tytuł</Text>
-                        <Text style={styles.text}>dla swojego nowego albumu</Text>
-                        <TextInput style={styles.input}
-                            defaultValue={appStore.newTitle}
-                            onChangeText={(txt) => { appStore.setNewTitle(txt) }}
-                            maxLength={20}
-                        />
-                    </View>
+                        <View>
+                            <Text style={styles.text}>Wprowadź swoje</Text>
+                            <Text style={styles.text}>imie i nazwisko</Text>
 
-                    <View>
-                        <Text style={styles.text}>Wprowadź swoje</Text>
-                        <Text style={styles.text}>imie i nazwisko</Text>
-
-                        <TextInput style={styles.input}
-                            defaultValue={appStore.username}
-                            onChangeText={(txt) => appStore.setUsername(txt)}
-                            maxLength={30}
-                            onSubmitEditing={() => appStore.checkAlbumCreating()}
-                        />
+                            <TextInput style={styles.input}
+                                defaultValue={appStore.username}
+                                onChangeText={(txt) => appStore.setUsername(txt)}
+                                maxLength={30}
+                                onSubmitEditing={() => appStore.checkAlbumCreating()}
+                            />
+                        </View>
                     </View>
 
                     {appStore.newCode &&
-                        <View>
+                        <View style={styles.sectionNewCode}>
                             <Text style={styles.codeText}>Twój kod zaproszenia</Text>
-                            <TextInput style={styles.codeInput}
-                                value={appStore.newCode}
-                                maxLength={10}
-                            />
+                            <View style={styles.codePanel}>
+                                <TextInput style={styles.codeInput}
+                                    value={appStore.newCode}
+                                    maxLength={10}
+                                    editable={false}
+                                />
+                                <Pressable style={styles.sectionShareButton}
+                                    onPress={() => appStore.shareNewCode()}>
+                                    <EButton touchableStyles={styles.shareButton}
+                                        icon='share'
+                                        color={colors.black}
+                                        onPress={() => appStore.shareNewCode()}
+                                    />
+                                    <View>
+                                        {/* <Text style={styles.shareText}>Udostępnij</Text> */}
+                                    </View>
+                                </Pressable>
+                            </View>
                         </View>
                     }
+
                 </View>
                 <View style={styles.box_bottom}>
 
                     <View style={styles.buttons}>
-                        <View>
-                            <EButton
+                        <View style={{ justifyContent: 'center' }}>
+                            <EButton touchableStyles={{ height: 30 }}
                                 icon='arrow-with-circle-left'
-                                color={colors.black}
+                                color={colors.taupe}
                                 onPress={() => { router.replace('/') }}
                             />
                         </View>
@@ -69,8 +88,8 @@ export default observer(function Admin() {
                             {!appStore.newCode &&
                                 <Button
                                     title='Stwórz'
+                                    color={colors.taupe}
                                     onPress={() => { appStore.checkAlbumCreating() }}
-                                    color={colors.black}
                                 />
                             }
                         </View>
@@ -87,7 +106,7 @@ export default observer(function Admin() {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        backgroundColor: colors.gray,
+        backgroundColor: colors.lavender,
     },
     homeScreen: {
         flex: 1,
@@ -96,21 +115,34 @@ const styles = StyleSheet.create({
         alignItems: 'center', // --
         //justifyContent: 'center',
     },
+    box_header: {
+        flex: 0.09,
+        // margin: 0,
+        paddingTop: 50,
+        // justifyContent: 'center',
+        // backgroundColor: 'yellow',  
+        width: '100%',
+    },
     box_top: {
-        flex: 0.85,
-        alignItems: 'center', // --
-        justifyContent: 'space-around', // |
+        flex: 0.76,
+        // alignItems: 'center', // --
+        // justifyContent: 'space-around', // |
+        justifyContent: 'center', // |
         // backgroundColor: colors.gray,
+        width: "100%"
     },
     box_bottom: {
         // backgroundColor: colors.gray,
         flex: 0.15,
+        // flexDirection: 'column',
         alignItems: 'center', // --
         justifyContent: 'center', // |
     },
     center: {
         alignItems: 'center', // --
         justifyContent: 'center', // |
+        backgroundColor: colors.lavender,
+        width: '100%'
     },
     image: {
         width: 170,
@@ -120,7 +152,7 @@ const styles = StyleSheet.create({
     input: {
         height: 55,
         width: 260,
-        borderWidth: 3,
+        // borderWidth: 3,
         paddingLeft: 12,
         borderRadius: 10,
         fontSize: 26,
@@ -138,16 +170,25 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         borderRadius: 10,
         fontSize: 26,
-        textAlign: 'center'
+        textAlign: 'center',
         // backgroundColor: colors.pink,
-        // color: colors.white,
+        color: colors.black,
     },
     text: {
         textAlign: 'center',
-        color: colors.black,
-        marginBottom: 5,
+        color: colors.taupe,
+        // marginBottom: 3,
         fontSize: 24,
         fontFamily: 'Coolvetica'
+    },
+    textAndInput: {
+        alignItems: 'center', // --
+        justifyContent: 'center', // |
+        // height: '100%',
+        width: "100%",
+        // paddingTop: 15,
+        // marginTop: -5,
+        backgroundColor: colors.lavender,
     },
     title: {
         color: colors.taupe,
@@ -158,7 +199,7 @@ const styles = StyleSheet.create({
     codeText: {
         textAlign: 'center',
         color: colors.black,
-        marginBottom: 5,
+        marginBottom: 8,
         fontSize: 20,
         fontFamily: 'Coolvetica'
     },
@@ -179,6 +220,33 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         justifyContent: 'space-evenly',
         // justifyContent: 'center'
+    },
+    sectionNewCode: {
+        // backgroundColor: 'yellow',
+        width: '100%',
+        // flexDirection: 'column'
+    },
+    codePanel: {
+        justifyContent: 'center',
+        flexDirection: 'row'
+    },
+    sectionShareButton: {
+        // backgroundColor: 'red',
+        color: colors.black,
+        // paddingLeft: 15,
+        marginTop: 15,
+        marginLeft: 15,
+        // justifyContent: 'center',
+        // alignContent: 'center'
+    },
+    shareButton: {
+        // backgroundColor: 'white',
+        // alignContent: 'center',
+        height: 30,
+        width: '100%'
+    },
+    shareText: {
+        color: colors.black,
     }
 })
 

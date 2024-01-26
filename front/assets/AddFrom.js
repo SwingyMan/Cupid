@@ -17,7 +17,7 @@ export default function AddFrom() {
                     <EButton
                         icon='camera'
                         onPress={() => { appStore.addFromCamera() }}
-                        color={colors.black}
+                        color={colors.white}
                     />
                     <Text style={styles.text}>
                         Dodaj z aparatu
@@ -37,7 +37,7 @@ export default function AddFrom() {
                     <EButton
                         icon='images'
                         onPress={() => { appStore.addFromGallery() }}
-                        color={colors.black}
+                        color={colors.white}
                     />
                     <Text style={styles.text}>
                         Dodaj z galerii
@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     pressable: {
-        color: colors.black,
         // backgroundColor: colors.white,
         alignItems: 'center', // --
         justifyContent: 'center',
@@ -78,11 +77,12 @@ const styles = StyleSheet.create({
         width: (Dimensions.get('window').width / 2) - 15,
         backgroundColor: colors.gray,
         borderWidth: 2,
-        // borderColor: colors.lavender
+        borderColor: colors.lavender
     },
     text: {
         fontSize: 20,
         fontFamily: 'Coolvetica',
+        color: colors.white
     },
     half: {
         alignItems: 'center', // --

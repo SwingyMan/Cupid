@@ -20,9 +20,9 @@ export default observer(function Loading() {
 
                 {/* <View style={styles.box_top}> */}
                 <Image style={styles.image}
-                    source={require('../assets/icon.png')}
+                    source={require('../assets/icons/icon.png')}
                 />
-                <Text style={styles.text}>Czekaj..</Text>
+                <Text style={styles.text}>Momencik..</Text>
                 {/* </View> */}
                 {/* <View style={styles.box_bottom}>
                     <Text style={styles.text}>Album Album Album</Text>

@@ -5,7 +5,7 @@ import { CameraType } from "expo-camera";
 import * as SingleImagePicker from 'expo-image-picker'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen';
-import { Alert, Keyboard, Platform } from "react-native";
+import { Alert, Keyboard, Platform, Share } from "react-native";
 import * as FileSystem from 'expo-file-system';
 
 export default class AppStore {
@@ -41,15 +41,9 @@ export default class AppStore {
     photo = null;
     camType = CameraType.back;
 
-    // keyboardIsVisible = false;
 
-    // testPhotoPath = "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540gesiek%252Fcupid-app-test/Camera/4e2cdf75-66c6-493c-981d-fdcf6160a5cc.jpg"
-    // testPhotoPath = "https://fastly.picsum.photos/id/885/300/300.jpg?hmac=3v2uaRLGKuJNiC9guRsxM4u2oykSNIvv87E95JfH9GU"
-    testPhotoPath = "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540gesiek%252Fcupid-app-test/Camera/d7eb5eb4-162d-49bd-a695-1ed6fb74ee19.jpg"
-    image64 = null
-
-    // TESTING
-
+    
+    // guzik for TESTING
 
     guzik = async () => {
         // console.log("ALBUM : ")
@@ -67,11 +61,15 @@ export default class AppStore {
 
 
         // console.log("wysyłam")
-        // await this.imgToBase64("file:///storage/emulated/0/DCIM/Camera/IMG_20240118_145230.jpg")
+        // await this.imgToBase64("file:///storage/emulated/0/DCIM/Camera/VID_20240114_100112_exported_0.jpg")
         //     .then(async (result) => {
-        //         console.log(result, " = result")
-        //         await this.postPhoto(1, result) // wysyłam do bazy
+        //         // console.log(result, " = result")
+        //         // wysyłam do bazy
+        //         await this.postPhoto(2, result).then((response) => {
+        //             console.log("postPhoto response: ", response)
+        //         }) 
         //     })
+
         // this.postPhoto(1, this.imgToBase64("file:///storage/emulated/0/DCIM/Camera/IMG_20240118_145230.jpg")) // wysyłam do bazy
 
         // this.showMyLocalPhotos()
@@ -218,6 +216,23 @@ export default class AppStore {
     @action setNewCode = (txt) => {
         this.newCode = txt;
         // console.log("newCode: " + this.newCode);
+    }
+
+    shareNewCode = async () => {
+        console.log("SHARING newCode!")
+        let txt = `Zapraszam Cię do dołączenia do mojego albumu zdjęć weselnych!
+
+Kod zaproszenia: ${this.newCode}
+        
+Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
+
+        try {
+            await Share.share({
+                message: txt
+            });
+        } catch (error) {
+            console.error('Sharing error: ', error);
+        }
     }
 
     @action setCodeIsValid = (bool) => {
@@ -383,6 +398,8 @@ export default class AppStore {
                     this.setNewCode(null)
                     alert("Oj, nie mogę utworzyć")
                 }
+
+                Keyboard.dismiss()
             }))
     }
 
@@ -635,11 +652,13 @@ export default class AppStore {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             // headers: { 'Content-Type': 'multipart/form-data' },
-            body: JSON.stringify({ "url": 'data:image/jpg;base64,' + b64data, "userId": userId })
+            // body: JSON.stringify({ "url": b64data, "userId": userId })                           // ONLINE
+            body: JSON.stringify({ "url": 'data:image/jpg;base64,' + b64data, "userId": userId })   // LOCAL
         };
         console.log("sending photo to db")
         // console.log("sending ", requestOptions)
-        return fetch(this.apiLocalCupidPath + "/photos", requestOptions)
+        return fetch(this.apiLocalCupidPath + "/photos", requestOptions)    // ONLINE
+        // return fetch(this.apiCupidPath + "/photos", requestOptions)      // LOCAL
             .then(function (response) {
                 if (!response.ok) {
                     console.log("response postPhoto not ok: ", response.status)
