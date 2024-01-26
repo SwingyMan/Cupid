@@ -10,13 +10,14 @@ import (
 
 func GetAlbums(c *gin.Context) {
 	var albumsJson []Models.AlbumJson
-	Infrastructure.DB.Find(&albumsJson)
-	for _, album := range albumsJson {
-		userIDs := Services.GetUserIDs(album.ID)
-		photoIDs := Services.GetPhotoIDs(album.ID)
+	var albums []Models.Album
+	Infrastructure.DB.Find(&albums)
+	for _, album := range albums {
+		userIDs := Services.GetUserIDs(album.AlbumID)
+		photoIDs := Services.GetPhotoIDs(album.AlbumID)
 
 		albumJson := Models.AlbumJson{
-			ID:       album.ID,
+			ID:       album.AlbumID,
 			Title:    album.Title,
 			Code:     album.Code,
 			AdminID:  int(album.AdminID),
@@ -33,28 +34,22 @@ func GetAlbums(c *gin.Context) {
 
 func GetAlbum(c *gin.Context) {
 	id := c.Params.ByName("id")
-	var album Models.AlbumJson
+	var album Models.Album
 	album.Code = id
 	Infrastructure.DB.Find(&album)
-	userIDs := Services.GetUserIDs(album.ID)
-	photoIDs := Services.GetPhotoIDs(album.ID)
+	userIDs := Services.GetUserIDs(album.AlbumID)
+	photoIDs := Services.GetPhotoIDs(album.AlbumID)
 
 	albumJson := Models.AlbumJson{
-		ID:       album.ID,
+		ID:       album.AlbumID,
 		Title:    album.Title,
 		Code:     album.Code,
-		AdminID:  album.AdminID,
-		NumPages: album.NumPages,
+		AdminID:  int(album.AdminID),
+		NumPages: int(album.NumPages),
 		UserIDs:  userIDs,
 		PhotoIDs: photoIDs,
 	}
-
-	if err := Infrastructure.DB.Find(&album).Error; err != nil {
-		c.AbortWithStatus(404)
-		fmt.Println(err)
-	} else {
-		c.JSON(200, albumJson)
-	}
+	c.JSON(200, albumJson)
 }
 
 func CreateAlbum(c *gin.Context) {
@@ -66,7 +61,7 @@ func CreateAlbum(c *gin.Context) {
 	album.Code = Services.GenerateRandomString(6)
 	album.AdminID = uint8(albumJson.AdminID)
 	album.Title = albumJson.Title
-	album.NumPages = uint8(albumJson.NumPages)
+	album.NumPages = uint8(len(albumJson.PhotoIDs))
 	Infrastructure.DB.Create(&album)
 	for _, d := range albumJson.UserIDs {
 		albumUsers.AlbumID = album.AlbumID
