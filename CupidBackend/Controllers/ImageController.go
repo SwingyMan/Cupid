@@ -27,7 +27,7 @@ func GetImages(c *gin.Context) {
 func GetImage(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var image Models.Photo
-	if err := Infrastructure.DB.Where("id = ?", id).First(&image).Error; err != nil {
+	if err := Infrastructure.DB.Where("id = ?", id).Find(&image).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	} else {
@@ -55,7 +55,7 @@ func CreateImage(c *gin.Context) {
 func UpdateImage(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var image Models.Photo
-	if err := Infrastructure.DB.Where("id = ?", id).First(&image).Error; err != nil {
+	if err := Infrastructure.DB.Where("id = ?", id).Find(&image).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	}

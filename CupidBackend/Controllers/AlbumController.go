@@ -15,7 +15,7 @@ func GetAlbums(c *gin.Context) {
 	for _, album := range albums {
 		userIDs := Services.GetUserIDs(album.AlbumID)
 		photoIDs := Services.GetPhotoIDs(album.AlbumID)
-
+		photoID := Services.GroupElements(photoIDs)
 		albumJson := Models.AlbumJson{
 			ID:       album.AlbumID,
 			Title:    album.Title,
@@ -23,7 +23,7 @@ func GetAlbums(c *gin.Context) {
 			AdminID:  int(album.AdminID),
 			NumPages: int(album.NumPages),
 			UserIDs:  userIDs,
-			PhotoIDs: photoIDs,
+			PhotoIDs: photoID,
 		}
 
 		albumsJson = append(albumsJson, albumJson)
@@ -36,10 +36,10 @@ func GetAlbum(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var album Models.Album
 	album.Code = id
-	Infrastructure.DB.Find(&album)
+	Infrastructure.DB.Where("code = ?", id).Find(&album)
 	userIDs := Services.GetUserIDs(album.AlbumID)
 	photoIDs := Services.GetPhotoIDs(album.AlbumID)
-
+	photoID := Services.GroupElements(photoIDs)
 	albumJson := Models.AlbumJson{
 		ID:       album.AlbumID,
 		Title:    album.Title,
@@ -47,7 +47,7 @@ func GetAlbum(c *gin.Context) {
 		AdminID:  int(album.AdminID),
 		NumPages: int(album.NumPages),
 		UserIDs:  userIDs,
-		PhotoIDs: photoIDs,
+		PhotoIDs: photoID,
 	}
 	c.JSON(200, albumJson)
 }
@@ -117,7 +117,7 @@ func UpdateAlbum(c *gin.Context) {
 func DeleteAlbum(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var album = Models.Album{Code: id}
-	Infrastructure.DB.First(&album, "code = ?", id)
+	Infrastructure.DB.Where(&album, "code = ?", id)
 	Infrastructure.DB.Where(Models.AlbumPhotos{AlbumID: album.AlbumID}).Delete(&Models.AlbumPhotos{})
 	Infrastructure.DB.Where(Models.AlbumUsers{AlbumID: album.AlbumID}).Delete(&Models.AlbumUsers{})
 	d := Infrastructure.DB.Where(&album).Delete(&album)
