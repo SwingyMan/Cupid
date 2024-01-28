@@ -6,6 +6,7 @@ import (
 	"cupid/Services"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func GetAlbums(c *gin.Context) {
@@ -100,18 +101,19 @@ func CreateAlbum(c *gin.Context) {
 }
 
 func UpdateAlbum(c *gin.Context) {
-	id := c.Params.ByName("InviteCode")
+	id := c.Params.ByName("id")
 	var albumJson Models.AlbumJson
 	var albumPhotos Models.AlbumPhotos
 	var albumUsers Models.AlbumUsers
 	var album Models.Album
 	c.BindJSON(&albumJson)
-	albumJson.Code = id
-	album.Code = id
+	newId, _ := strconv.ParseUint(id, 10, 32)
+	albumJson.ID = uint8(newId)
+	album.AlbumID = uint8(newId)
 	album.AdminID = uint8(albumJson.AdminID)
 	album.Title = albumJson.Title
 	album.NumPages = uint8(albumJson.NumPages)
-	Infrastructure.DB.First(&album, "code = ?", id)
+	Infrastructure.DB.Where("album_id = ?", id).Find(&album)
 	Infrastructure.DB.Where(Models.AlbumPhotos{AlbumID: album.AlbumID}).Delete(&Models.AlbumPhotos{})
 	Infrastructure.DB.Where(Models.AlbumUsers{AlbumID: album.AlbumID}).Delete(&Models.AlbumUsers{})
 	for _, d := range albumJson.UserIDs {
@@ -127,6 +129,7 @@ func UpdateAlbum(c *gin.Context) {
 			Infrastructure.DB.Create(&albumPhotos)
 		}
 	}
+	Infrastructure.DB.Model(&album).Where("code = ?", id).Updates(Models.Album{AdminID: uint8(albumJson.AdminID), Title: albumJson.Title, NumPages: uint8(albumJson.NumPages), Code: albumJson.Code})
 	albumJson.ID = album.AlbumID
 	albumJson.Code = album.Code
 	c.JSON(200, albumJson)

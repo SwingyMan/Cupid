@@ -27,7 +27,7 @@ func GetImages(c *gin.Context) {
 func GetImage(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var image Models.Photo
-	if err := Infrastructure.DB.Where("id = ?", id).Find(&image).Error; err != nil {
+	if err := Infrastructure.DB.Where("Photo_id = ?", id).Find(&image).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	} else {
@@ -55,7 +55,7 @@ func CreateImage(c *gin.Context) {
 func UpdateImage(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var image Models.Photo
-	if err := Infrastructure.DB.Where("id = ?", id).Find(&image).Error; err != nil {
+	if err := Infrastructure.DB.Where("Photo_id = ?", id).Find(&image).Error; err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
 	}
@@ -73,7 +73,8 @@ func UpdateImage(c *gin.Context) {
 func DeleteImage(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var image Models.Photo
-	d := Infrastructure.DB.Where("id = ?", id).Delete(&image)
-	fmt.Println(d)
+	var photo Models.AlbumPhotos
+	Infrastructure.DB.Where("photo_id = ?", id).Delete(&photo)
+	Infrastructure.DB.Where("Photo_id = ?", id).Delete(&image)
 	c.JSON(200, gin.H{"id #" + id: "deleted"})
 }
