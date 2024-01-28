@@ -63,7 +63,7 @@ export default observer(function Admin() {
                                     <EButton touchableStyles={styles.shareButton}
                                         icon='share'
                                         color={colors.black}
-                                        onPress={() => appStore.shareNewCode()}
+                                        onPress={async () => await appStore.shareNewCode()}
                                     />
                                     <View>
                                         {/* <Text style={styles.shareText}>Udostępnij</Text> */}

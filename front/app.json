@@ -6,7 +6,7 @@
       "backgroundColor": "#ddd",
       "resizeMode": "cover"
     },
-    "icon": "./assets/icons/icon.png",
+    "icon": "./assets/icons/icon18.png",
     "scheme": "acme",
     "web": {
       "bundler": "metro"

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, ScrollView } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, ScrollView, TouchableOpacity } from 'react-native';
 import { Dimensions } from 'react-native';
 import { Link, router } from 'expo-router'
 import { Camera, CameraType } from 'expo-camera'
@@ -21,8 +21,8 @@ export default observer(function CameraRoll() {
                 <StatusBar
                     backgroundColor={colors.black}
                     barStyle={'dark-content'}
-                    // backgroundColor={colors.black}
-                    // barStyle={'light-content'}
+                // backgroundColor={colors.black}
+                // barStyle={'light-content'}
                 />
 
                 <View style={styles.box_top}>
@@ -52,19 +52,37 @@ export default observer(function CameraRoll() {
                 <View style={styles.box_bottom}>
                     {appStore.photo ?
                         <View style={styles.buttons}>
-                            <View style={styles.viewButton}>
+                            {/* <View style={styles.viewButton}>
                                 <Button
                                     title='Wyczyść'
                                     color={colors.black}
                                     onPress={() => { appStore.clearPhoto() }}
                                 />
+                            </View> */}
+                            <View style={styles.viewButton}>
+                                <EButton
+                                    touchableStyles={{ height: 28 }}
+                                    icon='arrow-with-circle-left'
+                                    color={colors.white}
+                                    onPress={() => { appStore.clearPhoto() }}
+                                />
                             </View>
                             <View style={styles.viewButton}>
-                                <Button
-                                    title='Dodaj'
+                                {/* <Button
+                                    title='Zapisz'
                                     color={colors.black}
                                     onPress={() => { appStore.savePhoto() }}
-                                />
+                                /> */}
+                                <TouchableOpacity onPress={() => appStore.savePhoto()} style={{backgroundColor: colors.darkGrey}}>
+                                    <Text style={styles.text}>Zapisz</Text>
+                                </TouchableOpacity>
+                                {/* <EButton
+                                    title={"Zapisz"}
+                                    // icon={"folder-images"}
+                                    // touchableStyles={{ height: 32 }}
+                                    color={colors.white}
+                                    onPress={() => { appStore.savePhoto() }}
+                                /> */}
                             </View>
                         </View>
                         :
@@ -73,17 +91,34 @@ export default observer(function CameraRoll() {
                                 <EButton
                                     touchableStyles={{ height: 32 }}
                                     icon='arrow-with-circle-left'
-                                    color={colors.black}
+                                    color={colors.white}
                                     onPress={() => { router.replace('/photos') }}
                                 />
                             </View>
                             <View style={styles.viewButton}>
+                                <EButton
+                                    iconSize={60}
+                                    touchableStyles={{ height: 60 }}
+                                    icon='picasa'
+                                    color={colors.white}
+                                    onPress={() => { appStore.takePicture(cameraRef) }}
+                                />
+                            </View>
+                            <View style={styles.viewButton}>
+                                <EButton
+                                    touchableStyles={{ height: 32 }}
+                                    icon='picasa'
+                                    color={colors.darkGrey}
+                                    onPress={() => { }}
+                                />
+                            </View>
+                            {/* <View style={styles.viewButton}>
                                 <Button
                                     title='Zrób zdjęcie'
                                     color={colors.black}
                                     onPress={() => { appStore.takePicture(cameraRef) }}
                                 />
-                            </View>
+                            </View> */}
                         </View>
                     }
                     {/* <Link style={styles.link} href="/photos">&lt;Wróć</Link> */}
@@ -110,13 +145,13 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center', // --
         justifyContent: 'center', // |
-        backgroundColor: colors.taupe,
+        backgroundColor: colors.darkGrey,
     },
     box_bottom: {
         flex: 0.15,
         alignItems: 'center', // --
         // justifyContent: 'center', // |
-        backgroundColor: colors.taupe,
+        backgroundColor: colors.darkGrey,
     },
     image: {
         width: 170,
@@ -135,10 +170,10 @@ const styles = StyleSheet.create({
         color: colors.white,
     },
     text: {
-        color: colors.taupe,
-        //marginTop: 40,
-        fontSize: 20,
-        fontFamily: 'sans-serif'
+        color: colors.white,
+        padding: 2,
+        fontSize: 40,
+        fontFamily: 'Coolvetica'
     },
     link: {
         margin: 10,

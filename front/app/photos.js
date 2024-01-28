@@ -36,11 +36,13 @@ export default observer(function Photos() {
                 <View style={styles.box_top}>
                     {/* <Text>albumID = {appStore.albumID}</Text>
                     <Text>username = {appStore.username}</Text> */}
-                    <EButton
-                        touchableStyles={styles.button}
-                        icon='help-with-circle'
-                        onPress={() => { appStore.customAlert("Podpowiedź", "Możesz przytrzymać na zdjęciu, by usunąć je z wybranych.") }}
-                    />
+                    {(appStore.images.length > 1) &&
+                        <EButton
+                            touchableStyles={styles.button}
+                            icon='help-with-circle'
+                            onPress={() => { appStore.customAlert("Tip", "Możesz przytrzymać na zdjęciu, by usunąć je z wybranych.") }}
+                        />
+                    }
                     <FlatList
                         // horizontal
                         numColumns={2}
@@ -63,13 +65,13 @@ export default observer(function Photos() {
                 {/* <View style={styles.box_bottom}>
                     <Link style={styles.link} href="/camera">Camera&gt;</Link>
                     <Link style={styles.link} href="/gallery">Gallery&gt;</Link>
-                    <Link style={styles.link} href="/album">Album&gt;</Link>
-                    <Button
+                    <Link style={styles.link} href="/album">Album&gt;</Link> */}
+                {/* <Button
                         title='TEST GUZIK'
                         onPress={() => { appStore.guzik() }}
                         color={colors.black}
-                    />
-                </View> */}
+                    /> */}
+                {/* </View> */}
             </SafeAreaView>
         </View>
     );

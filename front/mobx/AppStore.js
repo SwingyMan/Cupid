@@ -42,14 +42,14 @@ export default class AppStore {
     camType = CameraType.back;
 
 
-    
+
     // guzik for TESTING
 
     guzik = async () => {
-        // console.log("ALBUM : ")
-        // console.log(this.fullAlbum)
-        // console.log("USER : ")
-        // console.log(this.fullUser)
+        console.log("ALBUM : ")
+        console.log(this.fullAlbum)
+        console.log("USER : ")
+        console.log(this.fullUser)
 
         // router.replace('/loading')
         // new Promise((res) => {
@@ -151,30 +151,35 @@ export default class AppStore {
     addUserToAlbum = async (userID, album) => {
         // dodajemy userID do listy userów w Albumie
         // lista userów to np. {... userIDs = [3, 2, 5, 6] ...}
+
         let updatedAlbum = album
-        updatedAlbum.userIDs.push(userID)
-        // if (updatedAlbum.Users) {
-        //     updatedAlbum.Users.push(userID)
-        // }
-        // else {
-        //     updatedAlbum.Users = []
-        //     updatedAlbum.Users.push(userID)
-        // }
+        // updatedAlbum.userIDs.push(userID)
+
+        if (updatedAlbum.userIDs) {
+            updatedAlbum.userIDs.push(userID)
+        }
+        else {
+            updatedAlbum.userIDs = []
+            updatedAlbum.userIDs.push(userID)
+        }
+
+        updatedAlbum.num_pages = updatedAlbum.num_pages + 1
+
         const requestOptions = {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedAlbum)
         };
         console.log("adding user to album, sending ", updatedAlbum, " via PUT")
-        return fetch(this.apiLocalCupidPath + "/albums/" + album.id, requestOptions)
-            // return fetch(this.apiCupidPath + "/albums/" + album.InviteCode, requestOptions)
+        // return fetch(this.apiLocalCupidPath + "/albums/" + album.id, requestOptions)
+        return fetch(this.apiCupidPath + "/albums/" + album.id, requestOptions)                 // <<< SPRAWDŹ
             .then(function (response) {
                 if (!response.ok) {
                     console.log("response addUserToAlbum not ok: ", response.status)
                     throw Error(response.statusText);
                 }
                 console.log("response addUserToAlbum status: ", response.status);
-                return response.json();
+                return response.json();     // zwraca zupdateowany album
             })
             .catch(function (error) {
                 console.log("addUserToAlbum not ok")
@@ -190,8 +195,8 @@ export default class AppStore {
             body: JSON.stringify({ "username": username })
         };
         console.log("adding user, sending ", requestOptions)
-        // return fetch(this.apiCupidPath + "/user/add", requestOptions)
-        return fetch(this.apiLocalCupidPath + "/users", requestOptions)
+        // return fetch(this.apiLocalCupidPath + "/users", requestOptions)
+        return fetch(this.apiCupidPath + "/users", requestOptions)                              // <<< OK
             .then(function (response) {
                 if (!response.ok) {
                     console.log("response addUser not ok: ", response.status)
@@ -269,9 +274,9 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
             body: JSON.stringify({
                 "title": title,
                 "adminID": adminID,
-                "code": kodzik,
-                "num_pages": 1,
-                "userIDs": [],
+                // "code": kodzik,
+                "num_pages": 0,
+                "userIDs": [],  // tu dodaje potem osobno
                 "photoIDs": [
                     []
                 ]
@@ -281,8 +286,8 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
         console.log("tytul i adminID: ", title, adminID)
         console.log("creating album, sending ", requestOptions)
 
-        // return fetch(this.apiCupidPath + "/albums", requestOptions)
-        return fetch(this.apiLocalCupidPath + "/albums", requestOptions)
+        // return fetch(this.apiLocalCupidPath + "/albums", requestOptions)
+        return fetch(this.apiCupidPath + "/albums", requestOptions)                         // <<< OK
             .then(function (response) {
                 if (!response.ok) {
                     console.log("response createAlbum not ok: ", response.status)
@@ -306,21 +311,24 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
         //       to tworzymy nowego usera
         //          bierzemy jego ID jako adminID i tworzymy album na bazie 'username' i 'adminID'
 
-        let adminID = 999
+        let adminID = 999 // safetyXD
 
         const userResponse = await this.checkUserExist();
         // console.log("user response data: ", userResponse)
         // console.log("user response bool1: ", Boolean(userResponse[0]))
         // console.log("user response data.username: ", userResponse[0].username)
         // console.log("user response bool2: ", Boolean(userResponse[0].username))
-        // [0] bo zwraca mi liste z obiektem jednego gościa !!!
-        if (userResponse.length > 0 && userResponse[0].username) { // czy lista jest pusta i czy pierwszy obiekt ma pole 'username'
+        // [0] bo zwraca mi liste z obiektem jednego gościa !!! (na lokalnym)
+        // if (userResponse.length > 0 && userResponse[0].username) { // czy lista jest pusta i czy pierwszy obiekt ma pole 'username'
+        if (userResponse && userResponse.Username != "") { // czy jest obiekt i czy 'username' nie jest pusty
             // jak już jest to spoko
             console.log("user już jest, robie album ")
-            this.setFullUser(userResponse[0])
+            console.log("curr user: ", userResponse)
+            // this.setFullUser(userResponse[0])
+            this.setFullUser(userResponse)
 
-            // adminID = userResponse.id
-            adminID = userResponse[0].id
+            // adminID = userResponse[0].id
+            adminID = userResponse.UserID
 
             // próbujemy stworzyć album
             const albumCreateResponse = await this.createNewAlbum(this.newTitle, adminID);
@@ -344,13 +352,13 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
             console.log("got from addUser: ", createdUserResponse)
             // console.log("jego ID", createdUserResponse.ID)
             // console.log("jego Username", createdUserResponse.Username)
-            // if (createdUserResponse && createdUserResponse.Username) {
-            if (createdUserResponse && createdUserResponse.username) {
+            // if (createdUserResponse && createdUserResponse.username) {
+            if (createdUserResponse && createdUserResponse.Username != "") {
 
-                console.log("user utworzony")
+                console.log("nowy user utworzony")
                 // adminID = createdUserResponse.ID
                 // po CREATE zwraca ino jeden obiekt (więc bez [0]) !!!
-                adminID = createdUserResponse.id
+                adminID = createdUserResponse.UserID
                 this.setFullUser(createdUserResponse)
 
                 // próbujemy stworzyć album
@@ -358,17 +366,19 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
 
                 console.log("czy album utworzony? ", albumCreateResponse)
                 // if (albumCreateResponse && albumCreateResponse.InviteCode != "") {
-                if (albumCreateResponse && albumCreateResponse.code) {
+                if (albumCreateResponse && albumCreateResponse.code != "") {
                     this.setFullAlbum(albumCreateResponse)
                     return true
                 }
                 else {
+                    this.customAlert("Uwaga", "Wystąpił błąd podczas tworzenia albumu.\nPrzepraszamy. Skontaktuj się z działem wsparcia.")
                     console.log("nie idzie utworzyć albumu")
                     return false
                 }
             }
             else {
                 // jak nie udało się stwórzyć
+                this.customAlert("Uwaga", "Wystąpił błąd podczas tworzenia użytkownika.\nPrzepraszamy. Skontaktuj się z działem wsparcia.")
                 console.log("nie idzie utworzyć usera")
                 return false
             }
@@ -378,7 +388,17 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
 
     checkAlbumCreating = async () => {
 
+        if (this.newTitle.trim() == "") {
+            return
+        }
+        console.log("username: ", this.username.trim())
+        if (this.username.trim() == "" || this.username.trim() == undefined || this.username.trim() == null) {
+            return
+        }
+
+        router.replace('/loading')
         console.log("waiting for fetch.. [albumCreate]")
+        Keyboard.dismiss()
 
         const checkingAlbum = await this.createAlbumWithAdmin() // title i adminID
         Promise.all([
@@ -388,9 +408,12 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
                 console.log("WAIT_FOR ENDED - RESPONSE CHECKED")
 
                 if (checkingAlbum) { // jak utworzono
-                    await this.addUserToAlbum(this.fullUser.id, this.fullAlbum) // dodajemy go do userIDs w albumie
+                    // const albumResponse = await this.addUserToAlbum(this.fullUser.id, this.fullAlbum) // dodajemy go do userIDs w albumie
+                    const albumResponse = await this.addUserToAlbum(this.fullUser.UserID, this.fullAlbum) // dodajemy go do userIDs w albumie
                     // this.setNewCode(this.fullAlbum.InviteCode) // pojawia się kod
                     // this.setCode(this.fullAlbum.InviteCode)
+                    console.log("i dodano usera do albumu: ", albumResponse)
+                    this.setFullAlbum(albumResponse)
                     this.setNewCode(String(this.fullAlbum.code)) // pojawia się kod
                     this.setCode(String(this.fullAlbum.code))
                 }
@@ -398,9 +421,9 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
                     this.setNewCode(null)
                     alert("Oj, nie mogę utworzyć")
                 }
-
-                Keyboard.dismiss()
             }))
+        
+        router.replace('/admin')
     }
 
     // CHECK ENTERING
@@ -414,8 +437,8 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
         //         console.log(err)
         //     )
 
-        // return fetch(this.apiCupidPath + "/albums/" + this.code)
-        return fetch(this.apiLocalCupidPath + "/albums?code=" + this.code)
+        // return fetch(this.apiLocalCupidPath + "/albums?code=" + this.code)
+        return fetch(this.apiCupidPath + "/albums?code=" + String(this.code))                               // <<< OK? (zwraca jednego nie liste) [naprawione]
             .then(function (response) {
                 if (!response.ok) {
                     console.log("response code not ok: ", response.status)
@@ -432,8 +455,8 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
     }
 
     checkUserExist = async () => {
-        return fetch(this.apiLocalCupidPath + "/users?username=" + this.username.trim())
-            // return fetch(this.apiCupidPath + "/user/" + this.username)
+        // return fetch(this.apiLocalCupidPath + "/users?username=" + this.username.trim())
+        return fetch(this.apiCupidPath + "/users?username=" + this.username.trim())                 // <<< OK? (zwraca jednego nie liste) [naprawione]
             .then(function (response) {
                 if (!response.ok) {
                     console.log("response user not ok: ", response.status)
@@ -451,18 +474,34 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
     }
 
     waitForUserAndAlbumCheck = async () => {
+
+        if (String(this.code) == "") {
+            this.setCodeIsValid(false)
+            return
+        }
+        console.log("username: ", this.username.trim())
+        if (this.username.trim() == "" || this.username.trim() == undefined || this.username.trim() == null) {
+            this.setUserIsValid(false)
+            return
+        }
+
         const albumResponse = await this.checkCodeExist();
         const userResponse = await this.checkUserExist();
-        this.setFullAlbum(albumResponse[0])
-        this.setFullUser(userResponse[0])
+        // this.setFullAlbum(albumResponse[0])
+        // this.setFullUser(userResponse[0])
+        this.setFullAlbum(albumResponse)
+        this.setFullUser(userResponse)
 
         console.log("response 1: ", albumResponse)
         console.log("response 2: ", userResponse)
 
-        if (albumResponse.length > 0 && albumResponse[0].code != "") { // jest taki album
-            console.log("code in response: ", albumResponse[0].code)
+        // if (albumResponse.length > 0 && albumResponse[0].code != "") { // jest taki album
+        if (albumResponse && albumResponse.code != "") { // jest taki album
+            // console.log("code in response: ", albumResponse[0].code)
+            console.log("code in response: ", albumResponse.code)
             console.log("setting code true")
-            this.setAlbumID(albumResponse[0].code)
+            // this.setAlbumID(albumResponse[0].code)
+            this.setAlbumID(albumResponse.code)
             this.setCodeIsValid(true);
         }
         else {
@@ -470,19 +509,24 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
             this.setCodeIsValid(false);
         }
 
-        if (userResponse.length > 0 && userResponse[0].username != "") { // jest taki user
-            console.log("user in response: ", userResponse[0].username)
+        // if (userResponse.length > 0 && userResponse[0].username != "") { // jest taki user
+        if (userResponse && userResponse.Username != "") { // jest taki user
+            // console.log("user in response: ", userResponse[0].username)
+            console.log("user in response: ", userResponse.Username)
             console.log("setting user true")
-            this.setUsername(userResponse[0].username)
+            // this.setUsername(userResponse[0].username)
+            this.setUsername(userResponse.Username)
             this.setUserIsValid(true);
 
             if (this.codeIsValid) { // jeśli album jest git, to sprawdzamy czy jest tam user
-                if (albumResponse[0].userIDs.includes(userResponse[0].id)) {
-                    console.log("nie, nie cza dodać")
+                // if (albumResponse[0].userIDs.includes(userResponse[0].id)) {
+                if (albumResponse.userIDs.includes(userResponse.UserID)) {
+                    console.log("nie, nie cza dodać do albumu")
                 }
                 else {
-                    console.log("tak, cza dodać")
-                    const dodany = await this.addUserToAlbum(userResponse[0].id, albumResponse[0])
+                    console.log("tak, cza dodać do albumu")
+                    // const dodany = await this.addUserToAlbum(userResponse[0].id, albumResponse[0])
+                    const dodany = await this.addUserToAlbum(userResponse.UserID, albumResponse)
                     console.log("dodany: ", dodany)
                 }
             }
@@ -518,15 +562,20 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
             }
             else {
                 console.log("Oj, trzeba dodać usera")
-                this.addUser(this.username.trim())
-                    .then((createdUserResponse) => {
-                        this.setFullUser(createdUserResponse)
-                        router.replace('/photos')
-                    })
+
+                const responseAddUser = await this.addUser(this.username.trim())
+                console.log("responseAddUser: ", responseAddUser)
+                this.setFullUser(responseAddUser)
+
+                const responseAddUserToAlbum = await this.addUserToAlbum(responseAddUser.UserID, this.fullAlbum)
+                console.log("responseAddUserToAlbum: ", responseAddUserToAlbum)
+                this.setFullAlbum(responseAddUserToAlbum)
+
+                router.replace('/photos')
             }
         } else {
             router.replace('/')
-            alert("Kod jest niepoprawny")
+            this.customAlert("Uwaga","Niepoprawny kod lub brak nazwy użytkownika.\nSprawdź wprowadzone dane oraz połączenie z internetem.")
         }
 
     }
@@ -534,7 +583,8 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
     // GETTING PHOTOS
 
     getMyPhotos = async () => {
-        return fetch(this.apiLocalCupidPath + "/photos?userId=" + this.fullUser.id)
+        // return fetch(this.apiLocalCupidPath + "/photos?userId=" + this.fullUser.id)
+        return fetch(this.apiCupidPath + "/photos?userId=" + this.fullUser.UserID)                      // <<< OK
             .then(function (response) {
                 if (!response.ok) {
                     console.log("response getMyPhotos not ok: ", response.status)
@@ -561,7 +611,8 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
         if (photosResponse) {
             photosResponse.map((photoObj) => {
                 // this.images.push({ id: this.images.length, uri: photoObj.url })
-                this.addPhotoToLocalImages(photoObj.id, photoObj.url)
+                // this.addPhotoToLocalImages(photoObj.id, photoObj.url)
+                this.addPhotoToLocalImages(photoObj.PhotoID, photoObj.URL)
             })
         }
     }
@@ -584,7 +635,7 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
         if (cameraRef.current) {
             try {
                 const data = await cameraRef.current.takePictureAsync({
-                    quality: 0.5
+                    // quality: 0.5
                 });
                 console.log("photo taken, data: ", data);
                 this.setPhoto(data.uri);
@@ -613,10 +664,13 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
                         // console.log(result, " = result")
                         // wysyłam do bazy
                         console.log("wysyłam zrobione zdjęcie do bazy")
-                        await this.postPhoto(this.fullUser.id, result)
+                        // await this.postPhoto(this.fullUser.id, result)
+                        await this.postPhoto(this.fullUser.UserID, result)
                             .then((response) => {
                                 console.log("zapisuję je w lokalnym stanie aplikacji")
-                                this.addPhotoToLocalImages(response.id, response.url)
+                                // this.addPhotoToLocalImages(response.id, response.url)
+                                this.addPhotoToLocalImages(response.PhotoID, response.URL)
+                                this.showMyLocalPhotos()
                                 router.replace('/photos')
                             })
                     })
@@ -652,13 +706,13 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             // headers: { 'Content-Type': 'multipart/form-data' },
-            // body: JSON.stringify({ "url": b64data, "userId": userId })                           // ONLINE
-            body: JSON.stringify({ "url": 'data:image/jpg;base64,' + b64data, "userId": userId })   // LOCAL
+            body: JSON.stringify({ "url": b64data, "userId": userId })                                  // ONLINE
+            // body: JSON.stringify({ "url": 'data:image/jpg;base64,' + b64data, "userId": userId })    // LOCAL
         };
         console.log("sending photo to db")
         // console.log("sending ", requestOptions)
-        return fetch(this.apiLocalCupidPath + "/photos", requestOptions)    // ONLINE
-        // return fetch(this.apiCupidPath + "/photos", requestOptions)      // LOCAL
+        // return fetch(this.apiLocalCupidPath + "/photos", requestOptions)         // LOCAL
+        return fetch(this.apiCupidPath + "/photos", requestOptions)                 // ONLINE                   // << OK? (hope so)
             .then(function (response) {
                 if (!response.ok) {
                     console.log("response postPhoto not ok: ", response.status)
@@ -697,35 +751,37 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
 
     // IMAGE PICKER | GALLERY
 
-    waitForSendingPhotos = async (wybrane) => {
+    // waitForSendingPhotos = async (wybrane) => {
 
-        await wybrane.map(async (photo) => {
+    //     await wybrane.map(async (photo) => {
 
-            // console.log("zapisuje wybrane photo:", photo.uri)
-            // this.addPhotoToLocalImages(photo.uri) // zapisuje w lokalnym stanie
-            // pWysylanie.push(new Promise((res) => {
-            //     setTimeout(res, 1000, "pWaiting")
-            // }))
+    //         // console.log("zapisuje wybrane photo:", photo.uri)
+    //         // this.addPhotoToLocalImages(photo.uri) // zapisuje w lokalnym stanie
+    //         // pWysylanie.push(new Promise((res) => {
+    //         //     setTimeout(res, 1000, "pWaiting")
+    //         // }))
 
-            console.log("wysyłam do bazy wybrane zdjęcie:", photo.uri)
+    //         console.log("wysyłam do bazy wybrane zdjęcie:", photo.uri)
 
-            await this.imgToBase64(photo.uri)
-                .then(async (result) => {
-                    // console.log(result, " = result")
-                    console.log("postPhoto then 1")
-                    // wysyłam do bazy
-                    await this.postPhoto(this.fullUser.id, result)
-                        .then((response) => {
-                            // zapisuje w lokalnym stanie jak dostanę responsa
-                            this.addPhotoToLocalImages(response.id, response.url)
-                            console.log("postPhoto then")
-                        })
-                    console.log("imgToBase64 then 2")
-                })
-            console.log("imgToBase64")
-        })
+    //         await this.imgToBase64(photo.uri)
+    //             .then(async (result) => {
+    //                 // console.log(result, " = result")
+    //                 console.log("postPhoto then 1")
+    //                 // wysyłam do bazy
+    //                 // await this.postPhoto(this.fullUser.id, result)
+    //                 await this.postPhoto(this.fullUser.USerID, result)
+    //                     .then((response) => {
+    //                         // zapisuje w lokalnym stanie jak dostanę responsa
+    //                         // this.addPhotoToLocalImages(response.id, response.url)
+    //                         this.addPhotoToLocalImages(response.PhotoID, response.URL)
+    //                         console.log("postPhoto then")
+    //                     })
+    //                 console.log("imgToBase64 then 2")
+    //             })
+    //         console.log("imgToBase64")
+    //     })
 
-    }
+    // }
 
     pickMultipleImages = async (wybrane) => {
         console.log("dodaję zdjęcie/zdjęcia wybrane z galerii")
@@ -752,15 +808,19 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
                     // console.log(result, " = result")
                     console.log("postPhoto then 1")
                     // wysyłam do bazy
-                    await this.postPhoto(this.fullUser.id, result)
+                    // await this.postPhoto(this.fullUser.id, result)
+                    await this.postPhoto(this.fullUser.UserID, result)
                         .then((response) => {
                             // zapisuje w lokalnym stanie jak dostanę responsa
-                            this.addPhotoToLocalImages(response.id, response.url)
+                            // this.addPhotoToLocalImages(response.id, response.url)
+                            this.addPhotoToLocalImages(response.PhotoID, response.URL)
                             console.log("postPhoto then")
                             if (i == 0) {
                                 console.log("Zapisywanie zakończone")
-                                this.showMyLocalPhotos()
                                 router.replace('/photos')
+                            }
+                            if (i == array.length - 1) {
+                                this.showMyLocalPhotos()
                             }
                         })
                     console.log("imgToBase64 then 2")
@@ -789,7 +849,8 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
             headers: { 'Content-Type': 'application/json' },
         };
         console.log("deleting photo from db")
-        return fetch(this.apiLocalCupidPath + "/photos/" + id, requestOptions)
+        // return fetch(this.apiLocalCupidPath + "/photos/" + id, requestOptions)
+        return fetch(this.apiCupidPath + "/photos/" + id, requestOptions)                   // <<< SPRAWDŹ
             .then(function (response) {
                 if (!response.ok) {
                     console.log("response deletePhoto not ok: ", response.status)

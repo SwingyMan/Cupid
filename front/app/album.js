@@ -15,12 +15,19 @@ export default observer(function Album() {
             <SafeAreaView style={styles.homeScreen}>
 
                 <StatusBar
-                    backgroundColor={colors.gray}
+                    backgroundColor={colors.taupe}
                     barStyle={'light-content'}
                 />
 
                 <View style={styles.box_top}>
-                    <Text style={styles.text}>ALBUM</Text>
+                    <Text style={styles.text}>"{appStore.fullAlbum.title}"</Text>
+                    <Text>{appStore.fullAlbum.id}.</Text>
+                    <Text>"{appStore.fullAlbum.title}"</Text>
+                    <Text>kod: {appStore.fullAlbum.code}</Text>
+                    <Text>admin: {appStore.fullAlbum.adminID}</Text>
+                    <Text>stron: {appStore.fullAlbum.num_pages}</Text>
+                    {appStore.fullAlbum.userIDs.map((uId) => { return (<Text key={uId}>uID: {uId}</Text>) })}
+                    <Text>{appStore.fullAlbum.photoIDs}</Text>
                 </View>
 
                 <View style={styles.box_bottom}>
@@ -52,12 +59,14 @@ const styles = StyleSheet.create({
         //justifyContent: 'center',
     },
     box_top: {
-        flex: 0.8,
+        flex: 0.9,
+        width: "100%",
         alignItems: 'center', // --
-        justifyContent: 'center', // |
+        // justifyContent: 'center', // |
+        // backgroundColor: colors.white,
     },
     box_bottom: {
-        flex: 0.2,
+        flex: 0.1,
         alignItems: 'center', // --
         justifyContent: 'center', // |
     },
@@ -78,10 +87,13 @@ const styles = StyleSheet.create({
         color: colors.white,
     },
     text: {
+        // backgroundColor: colors.white,
         color: colors.taupe,
-        margin: 20,
-        fontSize: 20,
-        fontFamily: 'sans-serif'
+        // margin: 20,
+        padding: 20,
+        // width: "100%",
+        fontSize: 28,
+        fontFamily: 'Coolvetica'
     },
     link: {
         display: "flex",

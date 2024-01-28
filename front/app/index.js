@@ -61,7 +61,7 @@ export default observer(function Page() {
                         </View>
                         <View style={styles.imageBox}>
                             <Image style={styles.image}
-                                source={require('../assets/icons/icon.png')}
+                                source={require('../assets/icons/icon18.png')}
                             />
                         </View>
                     </View>
@@ -93,9 +93,8 @@ export default observer(function Page() {
                                 <Link style={styles.link} href="/album">//Album&gt;</Link>
                                 <Link style={styles.link} href="/admin">//Admin&gt;</Link>
                                 </View>*/}
-                            <Text>v.0.7.8</Text>
-                            <Text>poprawiony UI</Text>
-                            <Text>LOCAL-ON 192.168.0.73:4444</Text>
+                            <Text>v.0.8.0</Text>
+                            <Text>ONLINE</Text>
                             {/* <Button
                                 title='TEST GUZIK'
                                 onPress={() => { appStore.guzik() }}

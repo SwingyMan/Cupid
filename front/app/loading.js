@@ -20,7 +20,7 @@ export default observer(function Loading() {
 
                 {/* <View style={styles.box_top}> */}
                 <Image style={styles.image}
-                    source={require('../assets/icons/icon.png')}
+                    source={require('../assets/icons/icon18.png')}
                 />
                 <Text style={styles.text}>Momencik..</Text>
                 {/* </View> */}
