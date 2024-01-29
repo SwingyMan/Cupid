@@ -1,9 +1,11 @@
 {
   "expo": {
+    "name": "Cupid",
+    "slug": "cupid-app-test",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash-new.png",
-      "backgroundColor": "#ddd",
+      "backgroundColor": "#ccb6b5",
       "resizeMode": "cover"
     },
     "icon": "./assets/icons/icon18.png",
@@ -29,7 +31,11 @@
       }
     },
     "android": {
-      "package": "com.gesiek.cupidapptest"
+      "package": "com.gesiek.cupidapptest",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/icon18.png",
+        "backgroundColor": "#fff"
+      }
     },
     "runtimeVersion": {
       "policy": "appVersion"

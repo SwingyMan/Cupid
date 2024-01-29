@@ -93,7 +93,7 @@ export default observer(function Page() {
                                 <Link style={styles.link} href="/album">//Album&gt;</Link>
                                 <Link style={styles.link} href="/admin">//Admin&gt;</Link>
                                 </View>*/}
-                            <Text>v.0.8.0</Text>
+                            <Text>v.0.8.1</Text>
                             <Text>ONLINE</Text>
                             {/* <Button
                                 title='TEST GUZIK'
