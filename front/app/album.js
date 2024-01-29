@@ -2,31 +2,48 @@ import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, I
 import { Link, router } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
+import * as appStore from '../mobx/AppStore.js';
 import React, { Component, useRef } from 'react';
 import Draggable from '../assets/Draggable.js';
 import ViewShot from 'react-native-view-shot';
 import colors from '../styles/colors';
 import {printToFileAsync} from 'expo-print';
 import { shareAsync } from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
+import { manipulateAsync } from 'expo-image-manipulator';
 
 export default observer(function Album() {
     const { appStore } = useStore();
     const viewShotRef = useRef();
     const convertToPdf = async () => {
         try {
-            let path = appStore.images[0].uri;
+
             let uri2;
+            let uri3;
             if (viewShotRef.current) {
                 uri2 = await viewShotRef.current.capture();
                 console.log(uri2);
             } else {
                 throw new Error('Ref is not available');
             }
+            //const image = await manipulateAsync(uri2, [], { base64: true });
+            await appStore.imgToBase64(uri2)
+            .then(async (result) => {
+                 // console.log(result, " = result")
+                 // wysyłam do bazy
+                console.log("wysyłam zrobione zdjęcie do bazy")
+                //await appStore.postPhoto(1, result)
+                await appStore.postPhoto(1, result)
+                    .then((response) => {
+                        console.log("zapisuję je w lokalnym stanie aplikacji")
+                        // this.addPhotoToLocalImages(response.id, response.url)
+                        uri3=response.URL;
+                    })
+            })
             const htmlContent = `
                 <html>
                     <body>
-                    aaaaa TEST TESTTEST TESTTEST
-                        <img src="${path}"/>
+                        <img src="${uri3}"/>
                     </body>
                 </html>
             `;
