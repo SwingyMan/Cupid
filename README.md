@@ -16,6 +16,11 @@ Discord - komunikacja
 
 Backend (Go)
 
+Docker
+Backend (Go)
+
+Mobilka (React Native)
+
 Mobilka (React Native)
 
 DB (Sqlite)
