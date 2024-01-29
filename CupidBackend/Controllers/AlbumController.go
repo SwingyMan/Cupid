@@ -10,7 +10,7 @@ import (
 )
 
 func GetAlbums(c *gin.Context) {
-	var albumsJson []Models.AlbumJson
+	var albumsJson []Models.AlbumJson2
 	var albums []Models.Album
 	code := c.Query("code")
 	if code == "" {
@@ -19,14 +19,15 @@ func GetAlbums(c *gin.Context) {
 			userIDs := Services.GetUserIDs(album.AlbumID)
 			photoIDs := Services.GetPhotoIDs(album.AlbumID)
 			photoID := Services.GroupElements(photoIDs)
-			albumJson := Models.AlbumJson{
+			pages := Services.GetURL(photoID)
+			albumJson := Models.AlbumJson2{
 				ID:       album.AlbumID,
 				Title:    album.Title,
 				Code:     album.Code,
 				AdminID:  int(album.AdminID),
 				NumPages: int(album.NumPages),
 				UserIDs:  userIDs,
-				PhotoIDs: photoID,
+				Pages:    pages,
 			}
 
 			albumsJson = append(albumsJson, albumJson)
@@ -39,14 +40,15 @@ func GetAlbums(c *gin.Context) {
 		userIDs := Services.GetUserIDs(album.AlbumID)
 		photoIDs := Services.GetPhotoIDs(album.AlbumID)
 		photoID := Services.GroupElements(photoIDs)
-		albumJson := Models.AlbumJson{
+		pages := Services.GetURL(photoID)
+		albumJson := Models.AlbumJson2{
 			ID:       album.AlbumID,
 			Title:    album.Title,
 			Code:     album.Code,
 			AdminID:  int(album.AdminID),
 			NumPages: int(album.NumPages),
 			UserIDs:  userIDs,
-			PhotoIDs: photoID,
+			Pages:    pages,
 		}
 		c.JSON(200, albumJson)
 	}
@@ -55,18 +57,19 @@ func GetAlbums(c *gin.Context) {
 func GetAlbum(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var album Models.Album
-	Infrastructure.DB.Where("albumId = ?", id).Find(&album)
+	Infrastructure.DB.Where("album_id = ?", id).Find(&album)
 	userIDs := Services.GetUserIDs(album.AlbumID)
 	photoIDs := Services.GetPhotoIDs(album.AlbumID)
 	photoID := Services.GroupElements(photoIDs)
-	albumJson := Models.AlbumJson{
+	pages := Services.GetURL(photoID)
+	albumJson := Models.AlbumJson2{
 		ID:       album.AlbumID,
 		Title:    album.Title,
 		Code:     album.Code,
 		AdminID:  int(album.AdminID),
 		NumPages: int(album.NumPages),
 		UserIDs:  userIDs,
-		PhotoIDs: photoID,
+		Pages:    pages,
 	}
 	c.JSON(200, albumJson)
 }
