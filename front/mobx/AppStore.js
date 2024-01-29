@@ -15,9 +15,9 @@ export default class AppStore {
     }
 
     images = [
-        { id: null, uri: null },
-        // { id: 1, uri: 'https://picsum.photos/301' },
-        // { id: 1, uri: 'https://via.placeholder.com/200/ffeeff' },
+        //{ id: null, uri: null },
+        //{ id: 1, uri: 'https://picsum.photos/301' },
+        //{ id: 2, uri: 'https://via.placeholder.com/200/ffeeff' },
     ];
 
     appIsReady = false;
@@ -907,5 +907,29 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
         }
     }
 
-
+    putPDF = async (userId, b64data) => {
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            // headers: { 'Content-Type': 'multipart/form-data' },
+            body: JSON.stringify({ "url": b64data, "userId": userId })                                  // ONLINE
+            // body: JSON.stringify({ "url": 'data:image/jpg;base64,' + b64data, "userId": userId })    // LOCAL
+        };
+        console.log("sending pdf to db")
+        // console.log("sending ", requestOptions)
+        // return fetch(this.apiLocalCupidPath + "/photos", requestOptions)         // LOCAL
+        return fetch(this.apiCupidPath + "/albums/"+userId, requestOptions)                 // ONLINE                   // << OK? (hope so)
+            .then(function (response) {
+                if (!response.ok) {
+                    console.log("response postPdf not ok: ", response.status)
+                    throw Error(response.statusText);
+                }
+                console.log("response postPdf status: ", response.status);
+                return response.json();
+            })
+            .catch(function (error) {
+                console.log("postPdf not ok")
+                return false;
+            })
+    }
 }

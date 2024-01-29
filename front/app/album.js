@@ -58,16 +58,43 @@ export default observer(function Album() {
                     </body>
                 </html>
             `;
+            console.log("tutaj");
             const { uri } = await printToFileAsync({ html: htmlContent });
-            //console.log('File has been saved to:', uri);
-            await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+            console.log('File has been saved to:', uri);
+            
+            router.replace('/loading')
+
+            if (uri) {
+                console.log("zapisuję w galerii urządzenia this.photo: ", uri) // zapisuje do galerii urzadzenia
+
+                // console.log("zapisuje zdjecie w lokalnym stanie")
+                // this.addPhotoToLocalImages(this.photo) // zapisuje w lokalnym stanie
+
+                await appStore.imgToBase64(uri)
+                    .then(async (result) => {
+                        // console.log(result, " = result")
+                        // wysyłam do bazy
+                        console.log("wysyłam zrobione zdjęcie do bazy")
+                        // await this.postPhoto(this.fullUser.id, result)
+                        await appStore.putPDF(appStore.fullUser.UserID, result)
+                            .then((response) => {
+                                console.log("zapisuję je w lokalnym stanie aplikacji")
+                                // this.addPhotoToLocalImages(response.id, response.url)
+                                router.replace('/photos')
+                            })
+                    })
+                return true
         }
+        else {
+            console.log("nie ma co zapisać [this.albums]")
+            router.replace('/albums')
+            return false
+        }
+    }
         catch (err) {
             console.error('Error:', err);
         }
     }
-    
-
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}> 
