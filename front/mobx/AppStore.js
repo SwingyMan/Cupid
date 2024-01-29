@@ -918,17 +918,17 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
         console.log("sending pdf to db")
         // console.log("sending ", requestOptions)
         // return fetch(this.apiLocalCupidPath + "/photos", requestOptions)         // LOCAL
-        return fetch(this.apiCupidPath + "/albums/"+userId, requestOptions)                 // ONLINE                   // << OK? (hope so)
+        return fetch(this.apiCupidPath + "/albums/"+this.fullAlbum.id, requestOptions)                 // ONLINE                   // << OK? (hope so)
             .then(function (response) {
                 if (!response.ok) {
-                    console.log("response postPdf not ok: ", response.status)
+                    console.log("response putPdf not ok: ", response.status)
                     throw Error(response.statusText);
                 }
                 console.log("response postPdf status: ", response.status);
                 return response.json();
             })
             .catch(function (error) {
-                console.log("postPdf not ok")
+                console.log("putPdf not ok")
                 return false;
             })
     }

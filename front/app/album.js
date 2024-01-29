@@ -16,6 +16,9 @@ export default observer(function Album() {
     const { appStore } = useStore();
     const viewShotRef = useRef();
     const [uri2, setImage] = useState(null);
+    const getAlbum = async () => {
+        
+    }
     const convertToPdf = async () => {
         try {
             let uri2;
@@ -80,6 +83,8 @@ export default observer(function Album() {
                             .then((response) => {
                                 console.log("zapisuję je w lokalnym stanie aplikacji")
                                 // this.addPhotoToLocalImages(response.id, response.url)
+                                this.addPhotoToLocalImages(response.PhotoID, response.URL)
+                                this.showMyLocalPhotos()
                                 router.replace('/photos')
                             })
                     })
@@ -103,6 +108,11 @@ export default observer(function Album() {
                     title='Zapisz'
                     color="red"
                     onPress={convertToPdf}
+                    />
+                    <Button
+                    title='Pobierz wszystkie'
+                    color="red"
+                    onPress={getAlbum}
                     />
             </View>
             <ViewShot  style={styles.box_big}ref={viewShotRef} options={{ format: 'jpg', quality: 0.9}}>
