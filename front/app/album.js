@@ -17,7 +17,12 @@ export default observer(function Album() {
     const viewShotRef = useRef();
     const [uri2, setImage] = useState(null);
     const getAlbum = async () => {
-        
+        try{
+            //appStore.loadMyPages();
+        }
+        catch (err) {
+            console.error('Error:', err);
+        }
     }
     const convertToPdf = async () => {
         try {
@@ -64,37 +69,37 @@ export default observer(function Album() {
             console.log("tutaj");
             const { uri } = await printToFileAsync({ html: htmlContent });
             console.log('File has been saved to:', uri);
-            
-            router.replace('/loading')
+            await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' })
+        //     router.replace('/loading')
 
-            if (uri) {
-                console.log("zapisuję w galerii urządzenia this.photo: ", uri) // zapisuje do galerii urzadzenia
+        //     if (uri) {
+        //         console.log("zapisuję w galerii urządzenia this.photo: ", uri) // zapisuje do galerii urzadzenia
 
-                // console.log("zapisuje zdjecie w lokalnym stanie")
-                // this.addPhotoToLocalImages(this.photo) // zapisuje w lokalnym stanie
+        //         // console.log("zapisuje zdjecie w lokalnym stanie")
+        //         // this.addPhotoToLocalImages(this.photo) // zapisuje w lokalnym stanie
 
-                await appStore.imgToBase64(uri)
-                    .then(async (result) => {
-                        // console.log(result, " = result")
-                        // wysyłam do bazy
-                        console.log("wysyłam zrobione zdjęcie do bazy")
-                        // await this.postPhoto(this.fullUser.id, result)
-                        await appStore.putPDF(appStore.fullUser.UserID, result)
-                            .then((response) => {
-                                console.log("zapisuję je w lokalnym stanie aplikacji")
-                                // this.addPhotoToLocalImages(response.id, response.url)
-                                this.addPhotoToLocalImages(response.PhotoID, response.URL)
-                                this.showMyLocalPhotos()
-                                router.replace('/photos')
-                            })
-                    })
-                return true
-        }
-        else {
-            console.log("nie ma co zapisać [this.albums]")
-            router.replace('/albums')
-            return false
-        }
+        //         await appStore.imgToBase64(uri)
+        //             .then(async (result) => {
+        //                 // console.log(result, " = result")
+        //                 // wysyłam do bazy
+        //                 console.log("wysyłam zrobione zdjęcie do bazy")
+        //                 // await this.postPhoto(this.fullUser.id, result)
+        //                 await appStore.putPDF(appStore.fullUser.UserID, result)
+        //                     .then((response) => {
+        //                         console.log("zapisuję je w lokalnym stanie aplikacji")
+        //                         // this.addPhotoToLocalImages(response.id, response.url)
+        //                         this.addPhotoToLocalImages(response.PhotoID, response.URL)
+        //                         this.showMyLocalPhotos()
+        //                         router.replace('/photos')
+        //                     })
+        //             })
+        //         return true
+        // }
+        // else {
+        //     console.log("nie ma co zapisać [this.albums]")
+        //     router.replace('/albums')
+        //     return false
+        // }
     }
         catch (err) {
             console.error('Error:', err);

@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         // elevation: 1,
     },
     image: {
-        backgroundColor: 'red',
+        backgroundColor: colors.lavender,
         width: "100%",
         height: "100%",
         // position: 'absolute',

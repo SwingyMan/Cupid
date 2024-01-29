@@ -19,6 +19,9 @@ export default class AppStore {
         //{ id: 1, uri: 'https://picsum.photos/301' },
         //{ id: 2, uri: 'https://via.placeholder.com/200/ffeeff' },
     ];
+    pages = [
+
+    ];
 
     appIsReady = false;
 
@@ -749,6 +752,9 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
         this.images = [...this.images, { id: id, uri: path }]
     }
 
+    @action addPageoLocalPages = (id, path) => {
+        this.pages = [...this.pages, { id: id, uri: path }]
+    }
     // IMAGE PICKER | GALLERY
 
     // waitForSendingPhotos = async (wybrane) => {
@@ -907,29 +913,66 @@ Pobierz aplikacje Cupid, jeśli jeszcze jej nie masz.`
         }
     }
 
-    putPDF = async (userId, b64data) => {
-        const requestOptions = {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            // headers: { 'Content-Type': 'multipart/form-data' },
-            body: JSON.stringify({ "url": b64data, "userId": userId })                                  // ONLINE
-            // body: JSON.stringify({ "url": 'data:image/jpg;base64,' + b64data, "userId": userId })    // LOCAL
-        };
-        console.log("sending pdf to db")
-        // console.log("sending ", requestOptions)
-        // return fetch(this.apiLocalCupidPath + "/photos", requestOptions)         // LOCAL
-        return fetch(this.apiCupidPath + "/albums/"+this.fullAlbum.id, requestOptions)                 // ONLINE                   // << OK? (hope so)
-            .then(function (response) {
-                if (!response.ok) {
-                    console.log("response putPdf not ok: ", response.status)
-                    throw Error(response.statusText);
-                }
-                console.log("response postPdf status: ", response.status);
-                return response.json();
-            })
-            .catch(function (error) {
-                console.log("putPdf not ok")
-                return false;
-            })
-    }
+//     putPDF = async (userId, b64data) => {
+//         const requestOptions = {
+//             method: 'PUT',
+//             headers: { 'Content-Type': 'application/json' },
+//             // headers: { 'Content-Type': 'multipart/form-data' },
+//             body: JSON.stringify({ "url": b64data, "userId": userId })                                  // ONLINE
+//             // body: JSON.stringify({ "url": 'data:image/jpg;base64,' + b64data, "userId": userId })    // LOCAL
+//         };
+//         console.log("sending pdf to db")
+//         // console.log("sending ", requestOptions)
+//         // return fetch(this.apiLocalCupidPath + "/photos", requestOptions)         // LOCAL
+//         return fetch(this.apiCupidPath + "/albums/"+this.fullAlbum.id, requestOptions)                 // ONLINE                   // << OK? (hope so)
+//             .then(function (response) {
+//                 if (!response.ok) {
+//                     console.log("response putPdf not ok: ", response.status)
+//                     throw Error(response.statusText);
+//                 }
+//                 console.log("response postPdf status: ", response.status);
+//                 return response.json();
+//             })
+//             .catch(function (error) {
+//                 console.log("putPdf not ok")
+//                 return false;
+//             })
+//     }
+// }
+
+// // GETTING PAGES
+
+// getMyPages = async () => {
+//     // return fetch(this.apiLocalCupidPath + "/photos?userId=" + this.fullUser.id)
+//     return fetch(this.apiCupidPath + "/albums?code=" + this.fullAlbum.id)                      // <<< OK
+//         .then(function (response) {
+//             if (!response.ok) {
+//                 console.log("response getMyPages not ok: ", response.status)
+//                 throw Error(response.statusText);
+//             }
+//             console.log("response getMyPagess status: ", response.status);
+//             return response.json();
+//         })
+//         .catch(function (error) {
+//             console.log("getMyPages not ok")
+//             return false;
+//         })
+// }
+
+// loadMyPages = async () => {
+
+//     this.clearMyLocalPhotos()
+
+//     console.log("waiting for fetch.. [gettingPagess]")
+//     const pagesResponse = await this.getMyPages()
+//     console.log("WAIT_FOR ENDED - RESPONSE CHECKED")
+//     // console.log("photosResponse: ", photosResponse)
+
+//     if (pagesResponse) {
+//         pagesResponse.map((pageObj) => {
+//             // this.images.push({ id: this.images.length, uri: photoObj.url })
+//             // this.addPhotoToLocalImages(photoObj.id, photoObj.url)
+//             this.addPhotoToLocalImages(pageObj.PhotoID, pageObj.URL)
+//         })
+//     }
 }
