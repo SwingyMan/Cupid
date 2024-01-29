@@ -1,45 +1,56 @@
-import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated, ScrollView, ImageBackground} from 'react-native';
+import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated, ScrollView, ImageBackground, Dimensions} from 'react-native';
 import { Link, router } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
 import * as appStore from '../mobx/AppStore.js';
-import React, { Component, useRef } from 'react';
+import React, { Component, useRef, useState } from 'react';
 import Draggable from '../assets/Draggable.js';
 import ViewShot from 'react-native-view-shot';
 import colors from '../styles/colors';
 import {printToFileAsync} from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
-import { manipulateAsync } from 'expo-image-manipulator';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 export default observer(function Album() {
     const { appStore } = useStore();
     const viewShotRef = useRef();
+    const [uri2, setImage] = useState(null);
     const convertToPdf = async () => {
         try {
-
             let uri2;
             let uri3;
             if (viewShotRef.current) {
                 uri2 = await viewShotRef.current.capture();
-                console.log(uri2);
+                //console.log(uri2);
             } else {
                 throw new Error('Ref is not available');
             }
-            //const image = await manipulateAsync(uri2, [], { base64: true });
-            await appStore.imgToBase64(uri2)
+            const manipResult = await ImageManipulator.manipulateAsync(
+                uri2,
+                [{resize: { height:1000, width:563}}],{compress: 1,format: ImageManipulator.SaveFormat.JPEG}
+                );
+                console.log("Manipulacja dziala");
+            const cropResult = await ImageManipulator.manipulateAsync(
+                manipResult.uri,
+                [{crop:  {originX: 0,
+                    originY: 60,
+                    width: 561,
+                    height: 880,}}],{compress: 1,format: ImageManipulator.SaveFormat.JPEG}
+                );
+            await appStore.imgToBase64(cropResult.uri)
             .then(async (result) => {
                  // console.log(result, " = result")
                  // wysyłam do bazy
                 console.log("wysyłam zrobione zdjęcie do bazy")
-                //await appStore.postPhoto(1, result)
                 await appStore.postPhoto(1, result)
                     .then((response) => {
-                        console.log("zapisuję je w lokalnym stanie aplikacji")
+                        //console.log("zapisuję je w lokalnym stanie aplikacji")
                         // this.addPhotoToLocalImages(response.id, response.url)
                         uri3=response.URL;
                     })
             })
+
             const htmlContent = `
                 <html>
                     <body>
@@ -47,14 +58,9 @@ export default observer(function Album() {
                     </body>
                 </html>
             `;
-            console.log('dupa1')
-            
-            // const printToFile = async () => {
-                // On iOS/android prints the given html. On web prints the HTML from the current page.
             const { uri } = await printToFileAsync({ html: htmlContent });
-            console.log('File has been saved to:', uri);
+            //console.log('File has been saved to:', uri);
             await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
-            // };
         }
         catch (err) {
             console.error('Error:', err);
@@ -72,10 +78,10 @@ export default observer(function Album() {
                     onPress={convertToPdf}
                     />
             </View>
-            <ViewShot  style={styles.box_big}ref={viewShotRef} options={{ format: 'jpg', quality: 0.9 }}>
-            <ViewShot 
-            style={styles.box_top}
-            options={{ format: 'jpg', quality: 0.9 }}/>
+            <ViewShot  style={styles.box_big}ref={viewShotRef} options={{ format: 'jpg', quality: 0.9}}>
+            <View style={styles.box_cover}/>
+            <View 
+            style={styles.box_top}/>
                     {/* <FlatList style={styles.flat_list}
                         // numColumns={4}
                         horizontal
@@ -97,6 +103,7 @@ export default observer(function Album() {
                             return <Draggable style={styles.upIndex} id={item.id} path={{ uri: item.uri }} key={item.id} />
                         })}
                 </View>
+                <View style={styles.box_cover}/>
                 </ViewShot>
             </SafeAreaView>
             
@@ -111,6 +118,7 @@ const styles = StyleSheet.create({
     },
     homeScreen: {
         flex: 1,
+        backgroundColor: colors.lavender,
         marginTop: StatusBar.currentHeight,
         alignItems: 'center', // --
         //justifyContent: 'center',
@@ -137,7 +145,6 @@ const styles = StyleSheet.create({
         // zIndex: 1,
     },
     box_bottom: {
-        flex: 0.1,
         flex: 0.1,
         alignItems: 'center', // --
         justifyContent: 'center', // |
@@ -198,7 +205,12 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
         backgroundColor: 'rgb(255, 255, 255)',
-        }
+        },
+    box_cover: {
+        height: 20,
+        width: '100%',
+        backgroundColor: colors.lavender,
+    }
 })
 
 
