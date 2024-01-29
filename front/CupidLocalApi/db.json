@@ -1,0 +1,74 @@
+{
+  "albums": [
+    {
+      "title": "Wesele Nowaków",
+      "adminID": 2,
+      "code": 1234,
+      "num_pages": 2,
+      "userIDs": [
+        2,
+        1,
+        3
+      ],
+      "photoIDs": [
+        [
+          4
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "id": 1
+    },
+    {
+      "title": "Album G",
+      "adminID": 1,
+      "code": 1058,
+      "num_pages": 1,
+      "userIDs": [
+        1
+      ],
+      "photoIDs": [
+        []
+      ],
+      "id": 2
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "Gesiek"
+    },
+    {
+      "id": 2,
+      "username": "Jan Nowak"
+    },
+    {
+      "id": 3,
+      "username": "Zofia Z."
+    }
+  ],
+  "photos": [
+    {
+      "id": 2,
+      "url": "https://via.placeholder.com/200/0000ff",
+      "userId": 1
+    },
+    {
+      "id": 3,
+      "url": "https://via.placeholder.com/200/55aaff",
+      "userId": 1
+    },
+    {
+      "id": 4,
+      "url": "https://via.placeholder.com/200/55ee00",
+      "userId": 2
+    },
+    {
+      "id": 5,
+      "url": "https://via.placeholder.com/200/cc8855",
+      "userId": 3
+    }
+  ]
+}

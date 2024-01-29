@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, PanResponder, Animated, ScrollView, ImageBackground} from 'react-native';
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { observer } from 'mobx-react';
 import { useStore } from '../mobx/store';
 import React, { Component, useRef } from 'react';
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
         // zIndex: 1,
     },
     box_bottom: {
+        flex: 0.1,
         flex: 0.1,
         alignItems: 'center', // --
         justifyContent: 'center', // |

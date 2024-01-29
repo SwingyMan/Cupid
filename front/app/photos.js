@@ -1,12 +1,15 @@
-import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, StatusBar, View, TextInput, Image, Button, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router'
 import { observer } from 'mobx-react';
 import * as MediaLibrary from 'expo-media-library'
 import { useEffect } from 'react';
 import { Camera } from 'expo-camera'
+import { Dimensions } from 'react-native';
 
 import { useStore } from '../mobx/store';
+import EButton from '../assets/EButton'
 import colors from '../styles/colors';
+import AddFrom from '../assets/AddFrom';
 
 export default observer(function Photos() {
 
@@ -22,20 +25,53 @@ export default observer(function Photos() {
 
     return (
         <View style={styles.body}>
+
             <SafeAreaView style={styles.homeScreen}>
+
+                <StatusBar
+                    backgroundColor={colors.taupe}
+                    barStyle={'light-content'}
+                />
+
                 <View style={styles.box_top}>
-                    <FlatList 
-                        horizontal
+                    {/* <Text>albumID = {appStore.albumID}</Text>
+                    <Text>username = {appStore.username}</Text> */}
+                    {(appStore.images.length > 1) &&
+                        <EButton
+                            touchableStyles={styles.button}
+                            icon='help-with-circle'
+                            onPress={() => { appStore.customAlert("Tip", "Możesz przytrzymać na zdjęciu, by usunąć je z wybranych.") }}
+                        />
+                    }
+                    <FlatList
+                        // horizontal
+                        numColumns={2}
                         data={appStore.images}
-                        renderItem={({item}) => <Image style={styles.image} source={{uri: item.uri}} key={item.id}></Image>}
+                        renderItem={({ item }) =>
+                            item.id ?
+                                <TouchableOpacity onLongPress={() => appStore.confirmDeleteThisImage(item.id)}>
+                                    <Image style={styles.image} source={{ uri: item.uri }} key={item.id}></Image>
+                                </TouchableOpacity>
+                                :
+                                <AddFrom />
+                        }
                         keyExtractor={item => item.id}
                     />
                 </View>
+
                 <View style={styles.box_bottom}>
+                    <Link style={styles.link} href="/album"><Text style={styles.text}>Przejdź do albumu</Text></Link>
+                </View>
+                {/* <View style={styles.box_bottom}>
                     <Link style={styles.link} href="/camera">Camera&gt;</Link>
                     <Link style={styles.link} href="/gallery">Gallery&gt;</Link>
-                    <Link style={styles.link} href="/album">Album&gt;</Link>
-                </View>
+                    <Link style={styles.link} href="/album">Album&gt;</Link> */}
+                {/* <Button
+                        title='TEST GUZIK'
+                        onPress={() => { appStore.guzik() }}
+                        color={colors.black}
+                    /> */}
+                {/* </View> */}
             </SafeAreaView>
         </View>
     );
@@ -45,6 +81,7 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         backgroundColor: colors.gray,
+        // maxHeight: '635px',
     },
     homeScreen: {
         flex: 1,
@@ -54,23 +91,35 @@ const styles = StyleSheet.create({
         //justifyContent: 'center',
     },
     box_top: {
-        flex: 0.7,
+        flex: 0.90,
         width: '100%',
-        flexDirection: 'row',
+        // flexDirection: 'row',
         //flexWrap: 'wrap',
         alignItems: 'center', // |
         //justifyContent: 'space-evenly', // --
         backgroundColor: colors.taupe,
+        // backgroundColor: colors.mint,
+        paddingTop: 10,
     },
     box_bottom: {
-        flex: 0.3,
-        alignItems: 'center', // --
-        justifyContent: 'center', // |
+        flex: 0.10,
+        alignItems: 'center', // |
+        flexDirection: "row",
+        // flexWrap: "wrap",
+        justifyContent: 'center', // --
+        borderTopWidth: 2,
+        borderColor: colors.white,
+        width: "100%",
     },
     image: {
         margin: 5,
-        width: 170,
-        height: 250,
+        width: (Dimensions.get('window').width / 2) - 15,
+        height: ((Dimensions.get('window').width / 2) - 15) / 3 * 4,
+        maxWidth: 300,
+        maxHeight: 500,
+        borderWidth: 2,
+        borderColor: colors.lavender,
+        // backgroundColor: colors.thistle
     },
     input: {
         height: 70,
@@ -86,17 +135,17 @@ const styles = StyleSheet.create({
     text: {
         color: colors.taupe,
         //marginTop: 40,
-        fontSize: 20,
-        fontFamily: 'sans-serif'
+        fontSize: 24,
+        fontFamily: 'Coolvetica',
     },
     link: {
-        margin: 10,
-        fontSize: 20,
+        padding: 10,
+        fontSize: 16,
     },
-    camera: {
-        backgroundColor: colors.taupe,
-        width: '50%',
-        height: '100%',
+    button: {
+        // paddingTop: 20,
+        height: 32,
+        // backgroundColor: colors.black
     }
 })
 
