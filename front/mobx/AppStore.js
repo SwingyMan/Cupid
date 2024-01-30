@@ -76,11 +76,6 @@ export default class AppStore {
         // console.log((this.testPhotoPath).substring(this.testPhotoPath.length-4))
     }
 
-    // @action setKeyboardVisibility = () => {
-    //     this.keyboardIsVisible = Keyboard.isVisible();
-    //     console.log("keyboardIsVisible: ", this.keyboardIsVisible)
-    // }
-
     // APP IS READY
 
     prepare = async () => {

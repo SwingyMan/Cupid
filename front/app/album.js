@@ -10,7 +10,7 @@ import colors from '../styles/colors.js';
 import { printToFileAsync } from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
-import { manipulateAsync } from 'expo-image-manipulator';
+import * as ImageManipulator from 'expo-image-manipulator';
 import EButton from '../assets/EButton.js';
 import { Dimensions } from 'react-native';
 
@@ -32,8 +32,25 @@ export default observer(function Album() {
             } else {
                 throw new Error('Ref is not available');
             }
-            //const image = await manipulateAsync(uri2, [], { base64: true });
-            await appStore.imgToBase64(uri2)
+
+            const manipResult = await ImageManipulator.manipulateAsync(
+                uri2,
+                [{ resize: { height: 1000, width: 563 } }], { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+            );
+            console.log("Manipulacja dziala");
+            const cropResult = await ImageManipulator.manipulateAsync(
+                manipResult.uri,
+                [{
+                    crop: {
+                        originX: 0,
+                        originY: 60,
+                        width: 561,
+                        height: 880,
+                    }
+                }], { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+            );
+
+            await appStore.imgToBase64(cropResult.uri)
                 .then(async (result) => {
                     // console.log(result, " = result")
                     // wysyłam do bazy
@@ -56,10 +73,10 @@ export default observer(function Album() {
             // <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes" />
             const htmlContent = `
                 <html>
-                    <head>
-                    </head>
                     <body>
-                        <img src="${uri3}"/>
+                        <center>
+                            <img src="${uri3}"/>
+                        </center>
                     </body>
                 </html>
             `;
@@ -92,6 +109,12 @@ export default observer(function Album() {
     return (
         <View style={styles.body}>
             <SafeAreaView style={styles.homeScreen}>
+
+                <StatusBar
+                    backgroundColor={colors.taupe}
+                    barStyle={'light-content'}
+                />
+
                 <View style={styles.box_toppest}>
                     <View>
                         <EButton
